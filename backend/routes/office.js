@@ -64,6 +64,18 @@ router.get('/parcels/:id', staffAuth, async (req, res) => {
 });
 
 // POST /api/office/parcels – create parcel + STK Push
+async function calculateFee(companyId, destinationOfficeId, parcelType, weightKg) {
+    const { rows } = await db.query(
+        'SELECT price FROM parcel_pricing WHERE company_id=$1 AND destination_office_id=$2 AND parcel_type=$3',
+        [companyId, destinationOfficeId, parcelType]
+    );
+    if (rows.length) {
+        const price = parseFloat(rows[0].price);
+        return parcelType === 'per_kg' ? price * Math.ceil(parseFloat(weightKg || 1)) : price;
+    }
+    return 100 + Math.ceil(parseFloat(weightKg || 1)) * 20;
+}
+
 function logUserAction(companyId, userId, action, details) {
     return db.query(
         'INSERT INTO user_logs (company_id, user_id, action, details) VALUES ($1,$2,$3,$4)',
@@ -72,7 +84,7 @@ function logUserAction(companyId, userId, action, details) {
 }
 
 router.post('/parcels', staffAuth, async (req, res) => {
-    const { senderName, senderPhone, senderIdNumber, receiverName, receiverPhone, receivingOfficeId, weightKg, paymentMethod, notes } = req.body;
+    const { senderName, senderPhone, senderIdNumber, receiverName, receiverPhone, receivingOfficeId, weightKg, paymentMethod, notes, parcelType } = req.body;
     if (!senderName || !senderPhone || !receiverName || !receiverPhone || !receivingOfficeId || !weightKg) {
         return res.status(400).json({ message: 'All required fields must be provided' });
     }
@@ -87,7 +99,7 @@ router.post('/parcels', staffAuth, async (req, res) => {
         const compRes = await db.query('SELECT * FROM companies WHERE id=$1', [req.user.company_id]);
         const company = compRes.rows[0];
 
-        const fee = 100 + Math.ceil(parseFloat(weightKg)) * 20;
+        const fee = await calculateFee(req.user.company_id, receivingOfficeId, parcelType || 'one_time', weightKg);
         const encryptedId = senderIdNumber ? encrypt(senderIdNumber) : null;
 
         if (method === 'cash') {
@@ -120,9 +132,9 @@ router.post('/parcels', staffAuth, async (req, res) => {
             const qrCode = await generateQR(qrData);
 
             const parcelRes = await db.query(
-                `INSERT INTO parcels (company_id, parcel_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid, payment_method, notes)
-           VALUES ($1,$2,$3,$4,$5,$6,'created',$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING *`,
-                [req.user.company_id, parcelId, trackingId, qrCode, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee, 'cash', notes || null]
+                `INSERT INTO parcels (company_id, parcel_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid, payment_method, notes, parcel_type)
+           VALUES ($1,$2,$3,$4,$5,$6,'created',$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *`,
+                [req.user.company_id, parcelId, trackingId, qrCode, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee, 'cash', notes || null, parcelType || 'one_time']
             );
             const parcel = parcelRes.rows[0];
 
@@ -159,9 +171,9 @@ router.post('/parcels', staffAuth, async (req, res) => {
         if (!company.mpesa_configured) return res.status(400).json({ message: 'Company M-Pesa not configured. Contact your admin.' });
 
         const parcelRes = await db.query(
-            `INSERT INTO parcels (company_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid, payment_method, notes)
-       VALUES ($1,'PENDING','PENDING',$2,$3,'pending_payment',$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
-            [req.user.company_id, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee, 'mpesa', notes || null]
+            `INSERT INTO parcels (company_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid, payment_method, notes, parcel_type)
+       VALUES ($1,'PENDING','PENDING',$2,$3,'pending_payment',$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
+            [req.user.company_id, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee, 'mpesa', notes || null, parcelType || 'one_time']
         );
         const parcel = parcelRes.rows[0];
 

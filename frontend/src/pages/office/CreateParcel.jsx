@@ -4,28 +4,29 @@ import api from '../../api/client';
 import toast from 'react-hot-toast';
 import { ArrowLeft, Package } from 'lucide-react';
 
-function calcFee(kg) {
-    const rounded = Math.ceil(parseFloat(kg) || 0);
-    return 100 + rounded * 20;
-}
-
 export default function CreateParcel() {
     const [offices, setOffices] = useState([]);
     const [form, setForm] = useState({
         senderName: '', senderPhone: '', senderIdNumber: '',
         receiverName: '', receiverPhone: '',
-        receivingOfficeId: '', weightKg: '', notes: ''
+        receivingOfficeId: '', weightKg: '', notes: '', parcelType: 'one_time'
     });
     const [submitting, setSubmitting] = useState(false);
     const [stkPending, setStkPending] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('mpesa');
+    const [calculatedFee, setCalculatedFee] = useState(null);
     const navigate = useNavigate();
 
-    const fee = form.weightKg ? calcFee(form.weightKg) : 0;
+    useEffect(() => {
+        api.get('/company/offices').then(r => setOffices(r.data)).catch(() => {});
+    }, []);
 
     useEffect(() => {
-        api.get('/company/offices').then(r => setOffices(r.data)).catch(() => { });
-    }, []);
+        if (!form.receivingOfficeId) { setCalculatedFee(null); return; }
+        api.get('/company/pricing/calculate', {
+            params: { office_id: form.receivingOfficeId, parcel_type: form.parcelType, weight: form.weightKg || 1 }
+        }).then(r => setCalculatedFee(r.data.fee)).catch(() => setCalculatedFee(null));
+    }, [form.receivingOfficeId, form.parcelType, form.weightKg]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -140,6 +141,17 @@ export default function CreateParcel() {
                             </div>
                         </div>
                         <div>
+                            <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Parcel Type</label>
+                            <div className="flex gap-3">
+                                {['one_time', 'per_kg'].map(type => (
+                                    <button key={type} type="button" onClick={() => setForm(f => ({ ...f, parcelType: type }))}
+                                        className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${form.parcelType === type ? 'bg-accent text-white border-accent' : 'bg-white/80 text-gray-500 border-white/50 hover:bg-white'}`}>
+                                        {type === 'one_time' ? 'One-Time' : 'Per Kg'}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
                             <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Notes (optional)</label>
                             <textarea rows={2} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
                                 className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner resize-none" placeholder="Special handling instructions..." />
@@ -165,20 +177,25 @@ export default function CreateParcel() {
                 </div>
 
                 {/* Fee Preview */}
-                {fee > 0 && (
+                {calculatedFee !== null && (
                     <div className="glass-card bg-accent-gradient text-white p-6 flex flex-col sm:flex-row items-center justify-between shadow-xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl -translate-y-1/2 translate-x-1/2"></div>
                         <div className="mb-2 sm:mb-0 relative z-10 text-center sm:text-left">
                             <div className="text-sm font-bold text-blue-100 uppercase tracking-widest mb-1">Calculated Fee</div>
-                            <div className="text-xs font-medium text-blue-200 bg-white/10 px-3 py-1 rounded-full inline-block">100 base + {Math.ceil(form.weightKg || 0)} kg × 20</div>
+                            <div className="text-xs font-medium text-blue-200 bg-white/10 px-3 py-1 rounded-full inline-block">{form.parcelType === 'one_time' ? 'Fixed price' : `${form.weightKg || 1} kg × rate`}</div>
                         </div>
-                        <div className="text-4xl font-black drop-shadow-md relative z-10">KES {fee}</div>
+                        <div className="text-4xl font-black drop-shadow-md relative z-10">KES {calculatedFee}</div>
+                    </div>
+                )}
+                {calculatedFee === null && form.receivingOfficeId && (
+                    <div className="glass-card bg-amber-50 border border-amber-200 p-4 rounded-2xl text-sm text-amber-800 font-medium text-center">
+                        No pricing set for this destination. Contact your company admin.
                     </div>
                 )}
 
                 <button type="submit" disabled={submitting}
                     className={`w-full py-5 rounded-2xl font-black text-lg text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0 ${paymentMethod === 'cash' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-primary hover:bg-secondary'}`}>
-                    {submitting ? 'Processing...' : paymentMethod === 'mpesa' ? `Create & Request KES ${fee} via M-Pesa` : `Create Parcel – Collect KES ${fee} Cash`}
+                    {submitting ? 'Processing...' : paymentMethod === 'mpesa' ? `Create & Request KES ${calculatedFee || '?'} via M-Pesa` : `Create Parcel – Collect KES ${calculatedFee || '?'} Cash`}
                 </button>
             </form>
         </div>

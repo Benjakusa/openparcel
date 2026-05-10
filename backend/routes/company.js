@@ -31,11 +31,11 @@ const companyAuth = [auth('company_admin'), tenantCheck];
 router.get('/dashboard', companyAuth, async (req, res) => {
     const cid = req.user.company_id;
     try {
-        const [offices, staff, parcels, revenue, byStatus, dailyRev, officesPerf] = await Promise.all([
+        const [offices, staff, parcels, revenueRows, byStatus, dailyRev, officesPerf] = await Promise.all([
             db.query('SELECT COUNT(*) FROM offices WHERE company_id=$1', [cid]),
             db.query(`SELECT COUNT(*) FROM users WHERE company_id=$1 AND role='office_staff'`, [cid]),
             db.query('SELECT COUNT(*) FROM parcels WHERE company_id=$1', [cid]),
-            db.query(`SELECT COALESCE(SUM(fee_paid),0) FROM parcels WHERE company_id=$1 AND status='picked_up'`, [cid]),
+            db.query(`SELECT payment_method, COALESCE(SUM(fee_paid),0) AS total FROM parcels WHERE company_id=$1 AND status='picked_up' GROUP BY payment_method`, [cid]),
             db.query(`SELECT status, COUNT(*) as count FROM parcels WHERE company_id=$1 GROUP BY status`, [cid]),
             db.query(`
         SELECT DATE(created_at) AS day, payment_method, COALESCE(SUM(fee_paid),0) AS total
@@ -55,12 +55,19 @@ router.get('/dashboard', companyAuth, async (req, res) => {
         ]);
         const statusMap = {};
         byStatus.rows.forEach(r => { statusMap[r.status] = parseInt(r.count); });
+        let revenueCash = 0, revenueMpesa = 0;
+        for (const r of revenueRows.rows) {
+            if (r.payment_method === 'cash') revenueCash = parseFloat(r.total);
+            else revenueMpesa = parseFloat(r.total);
+        }
         res.json({
             company: req.company,
             offices: parseInt(offices.rows[0].count),
             staff: parseInt(staff.rows[0].count),
             total_parcels: parseInt(parcels.rows[0].count),
-            revenue: parseFloat(revenue.rows[0].coalesce),
+            revenue_total: revenueCash + revenueMpesa,
+            revenue_cash: revenueCash,
+            revenue_mpesa: revenueMpesa,
             parcels_by_status: statusMap,
             daily_revenue: dailyRev.rows,
             per_office_performance: officesPerf.rows
@@ -296,6 +303,65 @@ router.get('/logs', companyAuth, async (req, res) => {
             params
         );
         res.json(rows);
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
+
+// --- PARCEL PRICING ---
+router.get('/pricing', companyAuth, async (req, res) => {
+    try {
+        const { rows } = await db.query(
+            `SELECT pp.*, o.name as office_name
+       FROM parcel_pricing pp
+       LEFT JOIN offices o ON o.id = pp.destination_office_id
+       WHERE pp.company_id = $1
+       ORDER BY o.name, pp.parcel_type`,
+            [req.user.company_id]
+        );
+        res.json(rows);
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
+
+router.post('/pricing', companyAuth, async (req, res) => {
+    const { destinationOfficeId, parcelType, price } = req.body;
+    if (!destinationOfficeId || !parcelType || price === undefined) {
+        return res.status(400).json({ message: 'destinationOfficeId, parcelType, and price required' });
+    }
+    if (!['one_time', 'per_kg'].includes(parcelType)) {
+        return res.status(400).json({ message: 'parcelType must be one_time or per_kg' });
+    }
+    try {
+        const { rows } = await db.query(
+            `INSERT INTO parcel_pricing (company_id, destination_office_id, parcel_type, price)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (company_id, destination_office_id, parcel_type)
+       DO UPDATE SET price = $4
+       RETURNING *`,
+            [req.user.company_id, destinationOfficeId, parcelType, price]
+        );
+        res.json(rows[0]);
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
+
+router.delete('/pricing/:id', companyAuth, async (req, res) => {
+    try {
+        await db.query('DELETE FROM parcel_pricing WHERE id=$1 AND company_id=$2', [req.params.id, req.user.company_id]);
+        res.json({ message: 'Pricing deleted' });
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
+
+// GET /api/company/pricing/calculate?office_id=X&parcel_type=one_time|per_kg&weight=Y
+router.get('/pricing/calculate', companyAuth, async (req, res) => {
+    const { office_id, parcel_type, weight } = req.query;
+    if (!office_id || !parcel_type) return res.status(400).json({ message: 'office_id and parcel_type required' });
+    try {
+        const { rows } = await db.query(
+            'SELECT price FROM parcel_pricing WHERE company_id=$1 AND destination_office_id=$2 AND parcel_type=$3',
+            [req.user.company_id, office_id, parcel_type]
+        );
+        if (!rows.length) return res.json({ fee: null, message: 'No pricing set for this destination and type' });
+        const price = parseFloat(rows[0].price);
+        const fee = parcel_type === 'per_kg' ? price * Math.ceil(parseFloat(weight || 1)) : price;
+        res.json({ fee, price, parcel_type });
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 

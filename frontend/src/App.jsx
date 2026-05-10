@@ -19,6 +19,7 @@ import CompanyOffices from './pages/company/CompanyOffices';
 import CompanyStaff from './pages/company/CompanyStaff';
 import CompanyParcels from './pages/company/CompanyParcels';
 import CompanyMpesa from './pages/company/CompanyMpesa';
+import CompanyPricing from './pages/company/CompanyPricing';
 import CompanySubscription from './pages/company/CompanySubscription';
 import CompanyLogs from './pages/company/CompanyLogs';
 import OfficeLayout from './pages/office/OfficeLayout';
@@ -78,6 +79,7 @@ export default function App() {
             <Route path="offices" element={<CompanyOffices />} />
             <Route path="staff" element={<CompanyStaff />} />
             <Route path="parcels" element={<CompanyParcels />} />
+            <Route path="pricing" element={<CompanyPricing />} />
             <Route path="mpesa" element={<CompanyMpesa />} />
             <Route path="subscription" element={<CompanySubscription />} />
             <Route path="logs" element={<CompanyLogs />} />

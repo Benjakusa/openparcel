@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
-import { Package, Building2, Users, Settings, CreditCard, LayoutDashboard, LogOut, Activity, ArrowLeft, Menu, X } from 'lucide-react';
+import { Package, Building2, Users, Settings, CreditCard, LayoutDashboard, LogOut, Activity, ArrowLeft, Menu, X, DollarSign } from 'lucide-react';
 
 export default function CompanyLayout() {
     const { user, logout } = useAuth();
@@ -15,6 +15,7 @@ export default function CompanyLayout() {
         { to: '/company/offices', icon: Building2, label: 'Offices' },
         { to: '/company/staff', icon: Users, label: 'Staff' },
         { to: '/company/parcels', icon: Package, label: 'Parcels' },
+        { to: '/company/pricing', icon: DollarSign, label: 'Pricing' },
         { to: '/company/logs', icon: Activity, label: 'Activity Logs' },
         { to: '/company/mpesa', icon: Settings, label: 'M-Pesa Settings' },
         { to: '/company/subscription', icon: CreditCard, label: 'Subscription' },
