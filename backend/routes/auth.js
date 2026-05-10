@@ -1,15 +1,25 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { z } = require('zod');
 const db = require('../db');
+
+const registerSchema = z.object({
+    companyName: z.string().min(2),
+    adminEmail: z.string().email(),
+    adminPassword: z.string().min(6)
+});
+
+const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(1)
+});
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-    const { companyName, adminEmail, adminPassword } = req.body;
-    if (!companyName || !adminEmail || !adminPassword) {
-        return res.status(400).json({ message: 'All fields required' });
-    }
     try {
+        const { companyName, adminEmail, adminPassword } = registerSchema.parse(req.body);
+
         // Check email uniqueness
         const exists = await db.query('SELECT id FROM users WHERE email=$1', [adminEmail]);
         if (exists.rows.length) return res.status(400).json({ message: 'Email already registered' });
@@ -30,6 +40,9 @@ router.post('/register', async (req, res) => {
 
         res.status(201).json({ message: 'Registration successful. Awaiting admin approval.' });
     } catch (err) {
+        if (err instanceof z.ZodError) {
+            return res.status(400).json({ message: 'Invalid input data', errors: err.errors });
+        }
         await db.query('ROLLBACK');
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -38,9 +51,9 @@ router.post('/register', async (req, res) => {
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
     try {
+        const { email, password } = loginSchema.parse(req.body);
+
         const userRes = await db.query(
             `SELECT u.*, c.name as company_name, c.approved, c.subscription_status, c.trial_end_date, o.name as office_name
        FROM users u
@@ -69,11 +82,14 @@ router.post('/login', async (req, res) => {
             company_name: user.company_name,
         };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.json({ token, user: payload });
     } catch (err) {
+        if (err instanceof z.ZodError) {
+            return res.status(400).json({ message: 'Invalid input data', errors: err.errors });
+        }
         console.error(err);
-        res.status(500).json({ message: 'Server error', detail: err.message, stack: err.stack });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
