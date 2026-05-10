@@ -32,11 +32,10 @@ export default function RegisterPage() {
                     </div>
                     <h2 className="text-2xl font-black text-primary mb-3">Registration Complete!</h2>
                     <p className="text-gray-500 mb-6 font-medium">
-                        Your company has been registered and is <strong className="text-primary">awaiting approval</strong> from our platform admin.
-                        You'll be notified once approved.
+                        Your company has been successfully registered. You can now securely log into your admin dashboard.
                     </p>
                     <Link to="/login" className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-secondary hover:shadow-lg transition-all shadow-md">
-                        Back to Login
+                        Log In Now
                     </Link>
                 </div>
             </div>
@@ -91,7 +90,7 @@ export default function RegisterPage() {
                         </div>
                         <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4 text-sm text-gray-600 font-medium">
                             <Package size={16} className="inline mr-2 text-accent" />
-                            After registration, a platform admin will review and approve your account.
+                            Your account will be instantly created and you can log in immediately.
                         </div>
                         <button
                             type="submit"

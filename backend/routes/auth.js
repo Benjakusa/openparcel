@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
 
         await db.query('BEGIN');
         const compRes = await db.query(
-            `INSERT INTO companies (name) VALUES ($1) RETURNING id`,
+            `INSERT INTO companies (name, approved) VALUES ($1, TRUE) RETURNING id`,
             [companyName]
         );
         const companyId = compRes.rows[0].id;
@@ -38,7 +38,7 @@ router.post('/register', async (req, res) => {
         );
         await db.query('COMMIT');
 
-        res.status(201).json({ message: 'Registration successful. Awaiting admin approval.' });
+        res.status(201).json({ message: 'Registration successful. You can now log in.' });
     } catch (err) {
         if (err instanceof z.ZodError) {
             return res.status(400).json({ message: 'Invalid input data', errors: err.errors });
