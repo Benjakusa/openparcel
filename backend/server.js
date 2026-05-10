@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -10,6 +11,23 @@ const db = require('./db');
 const { initIdGenerator } = require('./utils/idgen');
 
 const app = express();
+
+// Run migrations on startup
+async function runMigrations() {
+    try {
+        const migrationsDir = path.join(__dirname, '..', 'migrations');
+        const files = fs.readdirSync(migrationsDir).sort();
+        for (const file of files) {
+            if (file.endsWith('.sql')) {
+                const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
+                await db.query(sql);
+                console.log(`Migration applied: ${file}`);
+            }
+        }
+    } catch (err) {
+        console.error('Migration error (tables may already exist):', err.message);
+    }
+}
 
 // CORS – allow Vercel frontend and dev origin
 app.use(cors({
@@ -47,11 +65,11 @@ if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../frontend/dist/index.html')));
 }
 
-// Initialize ID generator (creates sequence + column if missing)
-initIdGenerator(db).catch(err => console.error('ID generator init failed:', err.message));
-
-// Start cron
-cron.startJobs();
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`OpenDesk Parcel backend running on :${PORT}`));
+// Run migrations, then start
+(async () => {
+    await runMigrations();
+    await initIdGenerator(db).catch(err => console.error('ID generator init failed:', err.message));
+    cron.startJobs();
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`OpenDesk Parcel backend running on :${PORT}`));
+})();
