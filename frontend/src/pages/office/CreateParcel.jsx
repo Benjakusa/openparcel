@@ -9,12 +9,13 @@ export default function CreateParcel() {
     const [form, setForm] = useState({
         senderName: '', senderPhone: '', senderIdNumber: '',
         receiverName: '', receiverPhone: '',
-        receivingOfficeId: '', weightKg: '', notes: '', parcelType: 'one_time'
+        receivingOfficeId: '', weightKg: '', notes: '', parcelType: 'one_time', pricingOption: ''
     });
     const [submitting, setSubmitting] = useState(false);
     const [stkPending, setStkPending] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('mpesa');
     const [calculatedFee, setCalculatedFee] = useState(null);
+    const [options, setOptions] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,11 +23,23 @@ export default function CreateParcel() {
     }, []);
 
     useEffect(() => {
+        if (!form.receivingOfficeId) { setCalculatedFee(null); setOptions([]); return; }
+        api.get('/company/pricing/options', {
+            params: { office_id: form.receivingOfficeId, parcel_type: form.parcelType }
+        }).then(r => {
+            setOptions(r.data);
+            if (r.data.length && !r.data.find(o => o.option_name === form.pricingOption)) {
+                setForm(f => ({ ...f, pricingOption: r.data[0].option_name }));
+            }
+        }).catch(() => setOptions([]));
+    }, [form.receivingOfficeId, form.parcelType]);
+
+    useEffect(() => {
         if (!form.receivingOfficeId) { setCalculatedFee(null); return; }
         api.get('/company/pricing/calculate', {
-            params: { office_id: form.receivingOfficeId, parcel_type: form.parcelType, weight: form.weightKg || 1 }
+            params: { office_id: form.receivingOfficeId, parcel_type: form.parcelType, weight: form.weightKg || 1, option: form.pricingOption || 'Standard' }
         }).then(r => setCalculatedFee(r.data.fee)).catch(() => setCalculatedFee(null));
-    }, [form.receivingOfficeId, form.parcelType, form.weightKg]);
+    }, [form.receivingOfficeId, form.parcelType, form.weightKg, form.pricingOption]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -144,13 +157,22 @@ export default function CreateParcel() {
                             <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Parcel Type</label>
                             <div className="flex gap-3">
                                 {['one_time', 'per_kg'].map(type => (
-                                    <button key={type} type="button" onClick={() => setForm(f => ({ ...f, parcelType: type }))}
+                                    <button key={type} type="button" onClick={() => setForm(f => ({ ...f, parcelType: type, pricingOption: '' }))}
                                         className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${form.parcelType === type ? 'bg-accent text-white border-accent' : 'bg-white/80 text-gray-500 border-white/50 hover:bg-white'}`}>
                                         {type === 'one_time' ? 'One-Time' : 'Per Kg'}
                                     </button>
                                 ))}
                             </div>
                         </div>
+                        {form.parcelType === 'one_time' && options.length > 0 && (
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Pricing Option</label>
+                                <select value={form.pricingOption} onChange={e => setForm(f => ({ ...f, pricingOption: e.target.value }))}
+                                    className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner font-medium">
+                                    {options.map(o => <option key={o.option_name} value={o.option_name}>{o.option_name} — KES {parseFloat(o.price).toLocaleString()}</option>)}
+                                </select>
+                            </div>
+                        )}
                         <div>
                             <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Notes (optional)</label>
                             <textarea rows={2} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}

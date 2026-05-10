@@ -322,7 +322,7 @@ router.get('/pricing', companyAuth, async (req, res) => {
 });
 
 router.post('/pricing', companyAuth, async (req, res) => {
-    const { destinationOfficeId, parcelType, price } = req.body;
+    const { destinationOfficeId, parcelType, optionName, price } = req.body;
     if (!destinationOfficeId || !parcelType || price === undefined) {
         return res.status(400).json({ message: 'destinationOfficeId, parcelType, and price required' });
     }
@@ -330,13 +330,14 @@ router.post('/pricing', companyAuth, async (req, res) => {
         return res.status(400).json({ message: 'parcelType must be one_time or per_kg' });
     }
     try {
+        const opt = parcelType === 'one_time' ? (optionName || 'Standard') : 'Standard';
         const { rows } = await db.query(
-            `INSERT INTO parcel_pricing (company_id, destination_office_id, parcel_type, price)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT (company_id, destination_office_id, parcel_type)
-       DO UPDATE SET price = $4
+            `INSERT INTO parcel_pricing (company_id, destination_office_id, parcel_type, option_name, price)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (company_id, destination_office_id, parcel_type, option_name)
+       DO UPDATE SET price = $5
        RETURNING *`,
-            [req.user.company_id, destinationOfficeId, parcelType, price]
+            [req.user.company_id, destinationOfficeId, parcelType, opt, price]
         );
         res.json(rows[0]);
     } catch (err) { res.status(500).json({ message: err.message }); }
@@ -349,19 +350,36 @@ router.delete('/pricing/:id', companyAuth, async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// GET /api/company/pricing/calculate?office_id=X&parcel_type=one_time|per_kg&weight=Y
+// GET /api/company/pricing/calculate?office_id=X&parcel_type=one_time|per_kg&weight=Y&option=Standard
 router.get('/pricing/calculate', companyAuth, async (req, res) => {
-    const { office_id, parcel_type, weight } = req.query;
+    const { office_id, parcel_type, weight, option } = req.query;
     if (!office_id || !parcel_type) return res.status(400).json({ message: 'office_id and parcel_type required' });
     try {
+        const opt = parcel_type === 'one_time' ? (option || 'Standard') : 'Standard';
         const { rows } = await db.query(
-            'SELECT price FROM parcel_pricing WHERE company_id=$1 AND destination_office_id=$2 AND parcel_type=$3',
-            [req.user.company_id, office_id, parcel_type]
+            'SELECT price, option_name FROM parcel_pricing WHERE company_id=$1 AND destination_office_id=$2 AND parcel_type=$3 AND option_name=$4',
+            [req.user.company_id, office_id, parcel_type, opt]
         );
-        if (!rows.length) return res.json({ fee: null, message: 'No pricing set for this destination and type' });
+        if (!rows.length) return res.json({ fee: null, options: [], message: 'No pricing set for this destination and type' });
         const price = parseFloat(rows[0].price);
         const fee = parcel_type === 'per_kg' ? price * Math.ceil(parseFloat(weight || 1)) : price;
-        res.json({ fee, price, parcel_type });
+        res.json({ fee, price, parcel_type, option_name: rows[0].option_name });
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
+
+// GET /api/company/pricing/options?office_id=X&parcel_type=one_time
+router.get('/pricing/options', companyAuth, async (req, res) => {
+    const { office_id, parcel_type } = req.query;
+    try {
+        const where = ['company_id=$1'];
+        const params = [req.user.company_id];
+        if (office_id) { params.push(office_id); where.push('destination_office_id=$' + params.length); }
+        if (parcel_type) { params.push(parcel_type); where.push('parcel_type=$' + params.length); }
+        const { rows } = await db.query(
+            `SELECT option_name, price FROM parcel_pricing WHERE ${where.join(' AND ')} ORDER BY option_name`,
+            params
+        );
+        res.json(rows);
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 

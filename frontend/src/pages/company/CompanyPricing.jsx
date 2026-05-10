@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/client';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, DollarSign, X } from 'lucide-react';
+import { Plus, Trash2, DollarSign, X, Package } from 'lucide-react';
 
 export default function CompanyPricing() {
     const [pricing, setPricing] = useState([]);
     const [offices, setOffices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [form, setForm] = useState({ destinationOfficeId: '', parcelType: 'one_time', price: '' });
+    const [form, setForm] = useState({ destinationOfficeId: '', parcelType: 'one_time', optionName: '', price: '' });
+    const [oneTimeOptions, setOneTimeOptions] = useState(['Standard']);
 
     const fetchPricing = () => {
         api.get('/company/pricing').then(r => setPricing(r.data)).catch(() => {}).finally(() => setLoading(false));
@@ -19,6 +20,11 @@ export default function CompanyPricing() {
         fetchPricing();
     }, []);
 
+    useEffect(() => {
+        const opts = new Set(pricing.filter(p => p.parcel_type === 'one_time').map(p => p.option_name));
+        setOneTimeOptions([...opts].sort());
+    }, [pricing]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!form.destinationOfficeId || !form.price) return toast.error('Fill all fields');
@@ -26,11 +32,12 @@ export default function CompanyPricing() {
             await api.post('/company/pricing', {
                 destinationOfficeId: parseInt(form.destinationOfficeId),
                 parcelType: form.parcelType,
+                optionName: form.parcelType === 'one_time' ? form.optionName || 'Standard' : undefined,
                 price: parseFloat(form.price),
             });
             toast.success('Pricing saved');
             setShowModal(false);
-            setForm({ destinationOfficeId: '', parcelType: 'one_time', price: '' });
+            setForm({ destinationOfficeId: '', parcelType: 'one_time', optionName: '', price: '' });
             fetchPricing();
         } catch (err) {
             toast.error(err.response?.data?.message || 'Failed to save pricing');
@@ -48,12 +55,20 @@ export default function CompanyPricing() {
         }
     };
 
+    const grouped = {};
+    for (const p of pricing) {
+        const key = p.office_name + '|' + p.destination_office_id;
+        if (!grouped[key]) grouped[key] = { office_name: p.office_name, oneTime: [], perKg: null };
+        if (p.parcel_type === 'one_time') grouped[key].oneTime.push(p);
+        else grouped[key].perKg = p;
+    }
+
     return (
-        <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-black text-gray-900">Parcel Pricing</h1>
-                    <p className="text-sm font-medium text-gray-500 mt-0.5">Set pricing per destination and parcel type</p>
+                    <p className="text-sm font-medium text-gray-500 mt-0.5">Set pricing per destination, type, and option</p>
                 </div>
                 <button onClick={() => setShowModal(true)}
                     className="bg-accent text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-secondary transition-all flex items-center gap-2 shadow-sm">
@@ -63,42 +78,60 @@ export default function CompanyPricing() {
 
             {loading ? (
                 <div className="text-center py-12 text-gray-400 font-medium">Loading...</div>
-            ) : pricing.length === 0 ? (
+            ) : Object.keys(grouped).length === 0 ? (
                 <div className="text-center py-12 text-gray-400 font-medium bg-white/50 rounded-2xl border border-gray-200">
                     <DollarSign size={40} className="mx-auto mb-3 text-gray-300" />
                     No pricing rules set. Add pricing for each destination office.
                 </div>
             ) : (
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="bg-gray-50 text-left text-xs text-gray-500 uppercase tracking-wider">
-                                <th className="px-5 py-3.5 font-bold">Destination Office</th>
-                                <th className="px-5 py-3.5 font-bold">Parcel Type</th>
-                                <th className="px-5 py-3.5 font-bold">Price (KES)</th>
-                                <th className="px-5 py-3.5"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {pricing.map(p => (
-                                <tr key={p.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-5 py-4 font-semibold text-gray-800">{p.office_name || 'Unknown'}</td>
-                                    <td className="px-5 py-4">
-                                        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${p.parcel_type === 'one_time' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}`}>
-                                            {p.parcel_type === 'one_time' ? 'One-Time' : 'Per Kg'}
-                                        </span>
-                                    </td>
-                                    <td className="px-5 py-4 font-black text-primary">KES {parseFloat(p.price).toLocaleString()}</td>
-                                    <td className="px-5 py-4 text-right">
-                                        <button onClick={() => handleDelete(p.id)}
-                                            className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-all">
-                                            <Trash2 size={15} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="space-y-4">
+                    {Object.entries(grouped).map(([key, g]) => (
+                        <div key={key} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                            <div className="px-5 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                                <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                                    <Package size={16} className="text-accent" /> {g.office_name}
+                                </h3>
+                            </div>
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="text-left text-xs text-gray-500 uppercase tracking-wider">
+                                        <th className="px-5 py-3 font-bold">Type</th>
+                                        <th className="px-5 py-3 font-bold">Option</th>
+                                        <th className="px-5 py-3 font-bold">Price (KES)</th>
+                                        <th className="px-5 py-3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {g.oneTime.map(p => (
+                                        <tr key={p.id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="px-5 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">One-Time</span></td>
+                                            <td className="px-5 py-3 font-semibold text-gray-700">{p.option_name || 'Standard'}</td>
+                                            <td className="px-5 py-3 font-black text-primary">KES {parseFloat(p.price).toLocaleString()}</td>
+                                            <td className="px-5 py-3 text-right">
+                                                <button onClick={() => handleDelete(p.id)}
+                                                    className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-all">
+                                                    <Trash2 size={15} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {g.perKg && (
+                                        <tr key={g.perKg.id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="px-5 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-50 text-purple-700">Per Kg</span></td>
+                                            <td className="px-5 py-3 font-semibold text-gray-700">—</td>
+                                            <td className="px-5 py-3 font-black text-primary">KES {parseFloat(g.perKg.price).toLocaleString()} / kg</td>
+                                            <td className="px-5 py-3 text-right">
+                                                <button onClick={() => handleDelete(g.perKg.id)}
+                                                    className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-all">
+                                                    <Trash2 size={15} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    ))}
                 </div>
             )}
 
@@ -125,16 +158,37 @@ export default function CompanyPricing() {
                                 <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Parcel Type</label>
                                 <div className="flex gap-3">
                                     {['one_time', 'per_kg'].map(type => (
-                                        <button key={type} type="button" onClick={() => setForm(f => ({ ...f, parcelType: type }))}
+                                        <button key={type} type="button" onClick={() => setForm(f => ({ ...f, parcelType: type, optionName: '' }))}
                                             className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${form.parcelType === type ? 'bg-accent text-white border-accent' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'}`}>
                                             {type === 'one_time' ? 'One-Time' : 'Per Kg'}
                                         </button>
                                     ))}
                                 </div>
                             </div>
+                            {form.parcelType === 'one_time' && (
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">Option Name</label>
+                                    <div className="flex gap-2">
+                                        <input type="text" value={form.optionName}
+                                            onChange={e => setForm(f => ({ ...f, optionName: e.target.value }))}
+                                            className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent font-medium"
+                                            placeholder="e.g. Standard, Express, Fragile" />
+                                    </div>
+                                    {oneTimeOptions.length > 0 && (
+                                        <div className="flex flex-wrap gap-1.5 mt-2">
+                                            {oneTimeOptions.map(opt => (
+                                                <button key={opt} type="button" onClick={() => setForm(f => ({ ...f, optionName: opt }))}
+                                                    className={`text-xs px-2.5 py-1 rounded-lg border font-medium transition-all ${form.optionName === opt ? 'bg-accent text-white border-accent' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`}>
+                                                    {opt}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">
-                                    Price {form.parcelType === 'per_kg' ? '(per kg)' : '(fixed)'}
+                                    Price {form.parcelType === 'per_kg' ? '(per kg)' : '(KES)'}
                                 </label>
                                 <input type="number" min="0" step="1" required value={form.price}
                                     onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
