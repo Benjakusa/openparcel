@@ -35,26 +35,26 @@ export default function OfficeDashboard() {
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
             {/* Office header */}
-            <div className="glass-card bg-accent-gradient p-8 shadow-sm text-white overflow-hidden">
+            <div className="glass-card bg-accent-gradient p-6 sm:p-8 shadow-sm text-white overflow-hidden">
                 <div className="relative z-10">
-                    <div className="text-sm text-blue-100 font-bold uppercase tracking-widest mb-2 opacity-80">Your Office</div>
-                    <div className="text-3xl sm:text-4xl font-black mb-1">{profile?.name || 'Loading...'}</div>
-                    <div className="text-blue-100 font-medium text-sm sm:text-base">{profile?.address || ''}</div>
+                    <div className="text-xs text-blue-100 font-bold uppercase tracking-widest mb-1 opacity-80">Your Office</div>
+                    <div className="text-xl sm:text-2xl font-black mb-1">{profile?.name || 'Loading...'}</div>
+                    <div className="text-blue-100 font-medium text-xs sm:text-sm">{profile?.address || ''}</div>
                 </div>
             </div>
 
             {/* Metrics Row */}
             <div className="grid grid-cols-3 gap-4">
                 <div className="glass-card p-4 text-center border-b-4 border-amber-400">
-                    <div className="text-3xl font-black text-amber-500 mb-1">{stats?.pending_dispatch || 0}</div>
+                    <div className="text-xl sm:text-2xl font-black text-amber-500 mb-1">{stats?.pending_dispatch || 0}</div>
                     <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">To Dispatch</div>
                 </div>
                 <div className="glass-card p-4 text-center border-b-4 border-sky-400">
-                    <div className="text-3xl font-black text-sky-500 mb-1">{stats?.in_transit_inbound || 0}</div>
+                    <div className="text-xl sm:text-2xl font-black text-sky-500 mb-1">{stats?.in_transit_inbound || 0}</div>
                     <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Incoming</div>
                 </div>
                 <div className="glass-card p-4 text-center border-b-4 border-purple-400">
-                    <div className="text-3xl font-black text-purple-500 mb-1">{stats?.ready_for_collection || 0}</div>
+                    <div className="text-xl sm:text-2xl font-black text-purple-500 mb-1">{stats?.ready_for_collection || 0}</div>
                     <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">To Collect</div>
                 </div>
             </div>

@@ -9,8 +9,8 @@ function StatCard({ icon: Icon, label, value, accentColor, sub }) {
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 shadow-inner ${accentColor}`}>
                 <Icon size={22} className="text-white drop-shadow-sm" />
             </div>
-            <div className="text-3xl font-black text-primary drop-shadow-sm">{value}</div>
-            <div className="text-sm font-medium text-gray-500 mt-1">{label}</div>
+            <div className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm">{value}</div>
+            <div className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{label}</div>
             {sub && <div className="text-xs text-gray-400 mt-1">{sub}</div>}
         </div>
     );
@@ -68,9 +68,9 @@ export default function CompanyDashboard() {
                 </div>
             )}
 
-            <div className="glass-card p-6 border-l-4 border-accent">
-                <h1 className="text-3xl font-black text-primary drop-shadow-sm mb-1">{company?.name}</h1>
-                <p className="text-gray-500 font-medium text-sm">
+            <div className="glass-card p-5 sm:p-6 border-l-4 border-accent">
+                <h1 className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm mb-1">{company?.name}</h1>
+                <p className="text-gray-500 font-medium text-xs sm:text-sm">
                     {isTrialing ? `Free trial – ${daysLeft} days left` : `Plan: ${company?.subscription_plan || 'None'} · Status: ${company?.subscription_status}`}
                 </p>
             </div>
@@ -100,7 +100,7 @@ export default function CompanyDashboard() {
                         {Object.entries(data.parcels_by_status).map(([status, count]) => (
                             <div key={status} className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
                                 <div className={`text-xs font-bold px-3 py-1 rounded-full inline-block mb-3 badge-${status}`}>{status.replace('_', ' ').toUpperCase()}</div>
-                                <div className="text-3xl font-black text-primary">{count}</div>
+                                <div className="text-xl sm:text-2xl font-black text-primary">{count}</div>
                             </div>
                         ))}
                     </div>

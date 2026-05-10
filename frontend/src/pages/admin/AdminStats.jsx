@@ -8,8 +8,8 @@ function StatCard({ icon: Icon, label, value, color }) {
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 shadow-inner ${color}`}>
         <Icon size={22} className="text-white drop-shadow-sm" />
       </div>
-      <div className="text-3xl font-black text-primary drop-shadow-sm">{value?.toLocaleString() ?? '—'}</div>
-      <div className="text-sm font-medium text-gray-500 mt-1">{label}</div>
+      <div className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm">{value?.toLocaleString() ?? '—'}</div>
+      <div className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{label}</div>
     </div>
   );
 }
@@ -90,9 +90,9 @@ export default function AdminStats() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card bg-accent-gradient p-8 text-white mb-2 overflow-hidden shadow-sm">
-        <h1 className="text-3xl font-black">Platform Analytics</h1>
-        <p className="text-blue-100 font-medium mt-2">Revenue, parcel volume, and client growth trends.</p>
+      <div className="glass-card bg-accent-gradient p-6 sm:p-8 text-white mb-2 overflow-hidden shadow-sm">
+        <h1 className="text-xl sm:text-2xl font-black">Platform Analytics</h1>
+        <p className="text-blue-100 font-medium mt-1 text-sm">Revenue, parcel volume, and client growth trends.</p>
       </div>
 
       {/* Stat Cards */}
