@@ -128,8 +128,8 @@ export default function CompanyDashboard() {
                                     const grouped = {};
                                     for (const r of data.daily_revenue) {
                                         if (!grouped[r.day]) grouped[r.day] = { day: r.day, cash: 0, mpesa: 0 };
-                                        if (r.payment_method === 'cash') grouped[r.day].cash = parseFloat(r.total);
-                                        else grouped[r.day].mpesa = parseFloat(r.total);
+                                        if (r.payment_method === 'cash') grouped[r.day].cash += parseFloat(r.total);
+                                        else grouped[r.day].mpesa += parseFloat(r.total);
                                     }
                                     return Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day)).map(d => (
                                         <tr key={d.day} className="hover:bg-white/60 transition-colors">

@@ -20,8 +20,8 @@ export default function OfficeRevenue() {
 
     for (const row of data) {
         if (!grouped[row.day]) grouped[row.day] = { day: row.day, cash: 0, mpesa: 0 };
-        if (row.payment_method === 'cash') { grouped[row.day].cash = parseFloat(row.total); totalCash += parseFloat(row.total); }
-        else { grouped[row.day].mpesa = parseFloat(row.total); totalMpesa += parseFloat(row.total); }
+        if (row.payment_method === 'cash') { grouped[row.day].cash += parseFloat(row.total); totalCash += parseFloat(row.total); }
+        else { grouped[row.day].mpesa += parseFloat(row.total); totalMpesa += parseFloat(row.total); }
     }
 
     const days = Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day));
