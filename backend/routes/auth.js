@@ -7,7 +7,8 @@ const db = require('../db');
 const registerSchema = z.object({
     companyName: z.string().min(2),
     adminEmail: z.string().email(),
-    adminPassword: z.string().min(8, 'Password must be at least 8 characters')
+    adminPassword: z.string().min(8, 'Password must be at least 8 characters'),
+    companyPhone: z.string().min(5).optional()
 });
 
 const loginSchema = z.object({
@@ -18,7 +19,7 @@ const loginSchema = z.object({
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
     try {
-        const { companyName, adminEmail, adminPassword } = registerSchema.parse(req.body);
+        const { companyName, adminEmail, adminPassword, companyPhone } = registerSchema.parse(req.body);
 
         // Check email uniqueness
         const exists = await db.query('SELECT id FROM users WHERE email=$1', [adminEmail]);
@@ -28,8 +29,8 @@ router.post('/register', async (req, res) => {
 
         await db.query('BEGIN');
         const compRes = await db.query(
-            `INSERT INTO companies (name, approved) VALUES ($1, TRUE) RETURNING id`,
-            [companyName]
+            `INSERT INTO companies (name, approved, phone) VALUES ($1, TRUE, $2) RETURNING id`,
+            [companyName, companyPhone || null]
         );
         const companyId = compRes.rows[0].id;
         await db.query(

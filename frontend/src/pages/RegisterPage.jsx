@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Package, Building2, CheckCircle } from 'lucide-react';
 
 export default function RegisterPage() {
-    const [form, setForm] = useState({ companyName: '', adminEmail: '', adminPassword: '' });
+    const [form, setForm] = useState({ companyName: '', adminEmail: '', adminPassword: '', companyPhone: '' });
     const [loading, setLoading] = useState(false);
     const [done, setDone] = useState(false);
 
@@ -63,6 +63,16 @@ export default function RegisterPage() {
                                 onChange={e => setForm(f => ({ ...f, companyName: e.target.value }))}
                                 className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
                                 placeholder="Acme Logistics Ltd"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-primary mb-1.5">Company Phone</label>
+                            <input
+                                type="tel"
+                                value={form.companyPhone}
+                                onChange={e => setForm(f => ({ ...f, companyPhone: e.target.value }))}
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                placeholder="+254 7XX XXX XXX"
                             />
                         </div>
                         <div>

@@ -72,7 +72,7 @@ function logUserAction(companyId, userId, action, details) {
 }
 
 router.post('/parcels', staffAuth, async (req, res) => {
-    const { senderName, senderPhone, senderIdNumber, receiverName, receiverPhone, receivingOfficeId, weightKg, paymentMethod } = req.body;
+    const { senderName, senderPhone, senderIdNumber, receiverName, receiverPhone, receivingOfficeId, weightKg, paymentMethod, notes } = req.body;
     if (!senderName || !senderPhone || !receiverName || !receiverPhone || !receivingOfficeId || !weightKg) {
         return res.status(400).json({ message: 'All required fields must be provided' });
     }
@@ -120,9 +120,9 @@ router.post('/parcels', staffAuth, async (req, res) => {
             const qrCode = await generateQR(qrData);
 
             const parcelRes = await db.query(
-                `INSERT INTO parcels (company_id, parcel_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid)
-           VALUES ($1,$2,$3,$4,$5,$6,'created',$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
-                [req.user.company_id, parcelId, trackingId, qrCode, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee]
+                `INSERT INTO parcels (company_id, parcel_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid, payment_method, notes)
+           VALUES ($1,$2,$3,$4,$5,$6,'created',$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING *`,
+                [req.user.company_id, parcelId, trackingId, qrCode, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee, 'cash', notes || null]
             );
             const parcel = parcelRes.rows[0];
 
@@ -133,6 +133,7 @@ router.post('/parcels', staffAuth, async (req, res) => {
                 receiving_office_name: receivingOfficeName,
                 receiving_office_address: receivingOfficeAddress,
                 company_name: company.name,
+                company_phone: company.phone,
             };
             const senderReceipt = await generateReceipt(receiptParcel, 'sender');
             const receiverReceipt = await generateReceipt(receiptParcel, 'receiver');
@@ -158,9 +159,9 @@ router.post('/parcels', staffAuth, async (req, res) => {
         if (!company.mpesa_configured) return res.status(400).json({ message: 'Company M-Pesa not configured. Contact your admin.' });
 
         const parcelRes = await db.query(
-            `INSERT INTO parcels (company_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid)
-       VALUES ($1,'PENDING','PENDING',$2,$3,'pending_payment',$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
-            [req.user.company_id, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee]
+            `INSERT INTO parcels (company_id, tracking_id, qr_code, sending_office_id, receiving_office_id, status, sender_name, sender_phone, sender_id_number, receiver_name, receiver_phone, weight_kg, fee_paid, payment_method, notes)
+       VALUES ($1,'PENDING','PENDING',$2,$3,'pending_payment',$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+            [req.user.company_id, req.user.office_id, receivingOfficeId, senderName, senderPhone, encryptedId, receiverName, receiverPhone, weightKg, fee, 'mpesa', notes || null]
         );
         const parcel = parcelRes.rows[0];
 
@@ -304,7 +305,7 @@ router.get('/parcels/:id/receipt', staffAuth, async (req, res) => {
     const type = req.query.type === 'receiver' ? 'receiver' : 'sender';
     try {
         const { rows } = await db.query(
-            `SELECT p.*, so.name as sending_office_name, ro.name as receiving_office_name, ro.address as receiving_office_address, c.name as company_name
+            `SELECT p.*, so.name as sending_office_name, ro.name as receiving_office_name, ro.address as receiving_office_address, c.name as company_name, c.phone as company_phone
         FROM parcels p
         LEFT JOIN offices so ON so.id=p.sending_office_id
         LEFT JOIN offices ro ON ro.id=p.receiving_office_id
