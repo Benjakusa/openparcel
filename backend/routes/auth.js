@@ -7,7 +7,7 @@ const db = require('../db');
 const registerSchema = z.object({
     companyName: z.string().min(2),
     adminEmail: z.string().email(),
-    adminPassword: z.string().min(6)
+    adminPassword: z.string().min(8, 'Password must be at least 8 characters')
 });
 
 const loginSchema = z.object({
