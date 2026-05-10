@@ -15,7 +15,7 @@ const app = express();
 // Run migrations on startup
 async function runMigrations() {
     try {
-        const migrationsDir = path.join(__dirname, '..', 'migrations');
+        const migrationsDir = path.join(__dirname, 'migrations');
         const files = fs.readdirSync(migrationsDir).sort();
         for (const file of files) {
             if (file.endsWith('.sql')) {
