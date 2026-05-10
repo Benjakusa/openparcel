@@ -14,7 +14,9 @@ const ACTION_COLORS = {
 };
 
 function formatDateTime(ts) {
+    if (!ts) return { date: '—', time: '' };
     const d = new Date(ts);
+    if (isNaN(d.getTime())) return { date: '—', time: '' };
     return {
         date: d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
         time: d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' }),

@@ -77,7 +77,7 @@ export default function OfficeParcels() {
                                 </div>
                                 <div className="flex w-full sm:w-auto sm:flex-col items-center sm:items-end justify-between grow-0 shrink-0 gap-2 border-t sm:border-0 border-gray-100 pt-3 sm:pt-0 mt-1 sm:mt-0">
                                     <div className="hidden sm:block"><StatusBadge status={p.status} /></div>
-                                    <div className="text-xs font-semibold text-gray-400">{new Date(p.created_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</div>
+                                    <div className="text-xs font-semibold text-gray-400">{p.created_at ? new Date(p.created_at).toLocaleString() : '—'}</div>
                                 </div>
                             </Link>
                         ))}

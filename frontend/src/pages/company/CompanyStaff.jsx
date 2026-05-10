@@ -178,7 +178,7 @@ export default function CompanyStaff() {
                                         <td className="px-6 py-4 font-semibold text-gray-600">{s.email}</td>
                                         <td className="px-6 py-4 font-semibold text-gray-600"><span className="bg-white/50 border border-white/50 px-2 py-1 rounded shadow-sm">{s.office_name || '—'}</span></td>
                                         <td className="px-6 py-4 font-medium text-gray-500">{s.phone || '—'}</td>
-                                        <td className="px-6 py-4 font-medium text-gray-400">{new Date(s.created_at).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 font-medium text-gray-400">{s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-1.5">
                                                 <button onClick={() => setResetConfig(s)} className="bg-white hover:bg-amber-50 border border-gray-200 hover:border-amber-200 text-amber-500 hover:text-amber-600 px-3 h-8 rounded-lg flex items-center justify-center transition-all shadow-sm font-bold text-xs" title="Reset Password">

@@ -66,7 +66,7 @@ export default function OfficeRevenue() {
                     <div className="divide-y divide-pale/50">
                         {days.map(d => (
                             <div key={d.day} className="px-4 py-3 flex items-center justify-between text-sm">
-                                <div className="font-semibold text-gray-700">{new Date(d.day + 'T00:00:00').toLocaleDateString()}</div>
+                                <div className="font-semibold text-gray-700">{d.day ? new Date(d.day + 'T00:00:00').toLocaleDateString() : '—'}</div>
                                 <div className="flex items-center gap-4">
                                     <span className="text-green-700 font-medium">KES {d.cash.toLocaleString()}</span>
                                     <span className="text-blue-700 font-medium">KES {d.mpesa.toLocaleString()}</span>

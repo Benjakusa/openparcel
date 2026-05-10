@@ -78,7 +78,7 @@ export default function CompanyParcels() {
                                             </td>
                                             <td className="px-6 py-4 font-bold text-emerald-600">KES {p.fee_paid}</td>
                                             <td className="px-6 py-4"><StatusBadge status={p.status} /></td>
-                                            <td className="px-6 py-4 text-gray-400 text-xs font-medium">{new Date(p.created_at).toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 text-gray-400 text-xs font-medium">{p.created_at ? new Date(p.created_at).toLocaleDateString() : '—'}</td>
                                             <td className="px-6 py-4">
                                                 <Link to={`/parcel/${p.id}`} className="text-accent text-xs font-bold hover:underline bg-white/50 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm hover:shadow hover:bg-white transition-all">View</Link>
                                             </td>

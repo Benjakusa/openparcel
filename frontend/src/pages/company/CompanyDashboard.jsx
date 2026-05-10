@@ -133,7 +133,7 @@ export default function CompanyDashboard() {
                                     }
                                     return Object.values(grouped).sort((a, b) => b.day.localeCompare(a.day)).map(d => (
                                         <tr key={d.day} className="hover:bg-white/60 transition-colors">
-                                            <td className="px-6 py-4 text-gray-700 font-semibold">{new Date(d.day + 'T00:00:00').toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 text-gray-700 font-semibold">{d.day ? new Date(d.day + 'T00:00:00').toLocaleDateString() : '—'}</td>
                                             <td className="px-6 py-4 text-emerald-600 font-medium">KES {d.cash.toLocaleString()}</td>
                                             <td className="px-6 py-4 text-sky-600 font-medium">KES {d.mpesa.toLocaleString()}</td>
                                             <td className="px-6 py-4 font-black text-primary">KES {(d.cash + d.mpesa).toLocaleString()}</td>

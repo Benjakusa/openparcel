@@ -27,7 +27,7 @@ function BarChart({ data, valueKey, color, height = 120 }) {
               {Number(d[valueKey]).toLocaleString()}
             </div>
             <div className="w-full rounded-t-sm transition-all hover:opacity-80" style={{ height: `${h}%`, backgroundColor: color, minHeight: d[valueKey] > 0 ? 4 : 0 }} />
-            {data.length <= 31 && <span className="text-[8px] text-gray-400 mt-1 rotate-45 origin-left whitespace-nowrap">{new Date(d.day).getDate()}</span>}
+            {data.length <= 31 && <span className="text-[8px] text-gray-400 mt-1 rotate-45 origin-left whitespace-nowrap">{d.day ? new Date(d.day).getDate() : ''}</span>}
           </div>
         );
       })}
@@ -134,7 +134,7 @@ export default function AdminStats() {
                       KES {Number(d.platform_revenue).toLocaleString()}
                     </div>
                     <div className="w-full rounded-t-sm transition-all" style={{ height: `${Math.max(h, 2)}%`, backgroundColor: '#34d399' }} />
-                    {revenueData.length <= 31 && <span className="text-[8px] text-gray-400 mt-1">{new Date(d.day).getDate()}</span>}
+                    {revenueData.length <= 31 && <span className="text-[8px] text-gray-400 mt-1">{d.day ? new Date(d.day).getDate() : ''}</span>}
                   </div>
                 );
               });
