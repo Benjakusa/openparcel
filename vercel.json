@@ -2,10 +2,11 @@
     "buildCommand": "cd frontend && npm install && npm run build",
     "outputDirectory": "frontend/dist",
     "framework": "vite",
-    "env": {
-        "VITE_API_URL": "https://openparcel-5f7k.onrender.com/api"
-    },
     "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "https://openparcel-5f7k.onrender.com/api/$1"
+        },
         {
             "source": "/(.*)",
             "destination": "/index.html"

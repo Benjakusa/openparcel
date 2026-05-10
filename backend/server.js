@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
+const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
@@ -9,6 +10,16 @@ const db = require('./db');
 const { initIdGenerator } = require('./utils/idgen');
 
 const app = express();
+
+// CORS – allow Vercel frontend and dev origin
+app.use(cors({
+    origin: [
+        'https://opendesk-seven.vercel.app',
+        'http://localhost:5173',
+        'http://localhost:4173',
+    ],
+    credentials: true,
+}));
 
 // Security
 app.use(helmet());
