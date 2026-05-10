@@ -44,18 +44,18 @@ export default function OfficeDashboard() {
             </div>
 
             {/* Metrics Row */}
-            <div className="grid grid-cols-3 gap-4">
-                <div className="glass-card p-4 text-center border-b-4 border-amber-400">
-                    <div className="text-xl sm:text-2xl font-black text-amber-500 mb-1">{stats?.pending_dispatch || 0}</div>
-                    <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">To Dispatch</div>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                <div className="glass-card p-3 sm:p-4 text-center border-b-4 border-amber-400">
+                    <div className="text-lg sm:text-xl font-black text-amber-500 mb-0.5">{stats?.pending_dispatch || 0}</div>
+                    <div className="text-[10px] sm:text-xs font-semibold text-gray-500 whitespace-nowrap">To Dispatch</div>
                 </div>
-                <div className="glass-card p-4 text-center border-b-4 border-sky-400">
-                    <div className="text-xl sm:text-2xl font-black text-sky-500 mb-1">{stats?.in_transit_inbound || 0}</div>
-                    <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Incoming</div>
+                <div className="glass-card p-3 sm:p-4 text-center border-b-4 border-sky-400">
+                    <div className="text-lg sm:text-xl font-black text-sky-500 mb-0.5">{stats?.in_transit_inbound || 0}</div>
+                    <div className="text-[10px] sm:text-xs font-semibold text-gray-500 whitespace-nowrap">Incoming</div>
                 </div>
-                <div className="glass-card p-4 text-center border-b-4 border-purple-400">
-                    <div className="text-xl sm:text-2xl font-black text-purple-500 mb-1">{stats?.ready_for_collection || 0}</div>
-                    <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">To Collect</div>
+                <div className="glass-card p-3 sm:p-4 text-center border-b-4 border-purple-400">
+                    <div className="text-lg sm:text-xl font-black text-purple-500 mb-0.5">{stats?.ready_for_collection || 0}</div>
+                    <div className="text-[10px] sm:text-xs font-semibold text-gray-500 whitespace-nowrap">To Collect</div>
                 </div>
             </div>
 
