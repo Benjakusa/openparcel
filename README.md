@@ -78,6 +78,13 @@ cd frontend && npm run dev
 | Staff (Nairobi)    | staff.nairobi@demologs.com  | staff123   |
 | Staff (Mombasa)    | staff.mombasa@demologs.com  | staff123   |
 
+## Deployment
+
+| Service  | URL                                                  |
+|----------|------------------------------------------------------|
+| Backend  | https://openparcel-5f7k.onrender.com                 |
+| Health   | https://openparcel-5f7k.onrender.com/health          |
+
 ## Docker
 
 ```bash
