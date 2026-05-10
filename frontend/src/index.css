@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+@theme {
+  /* OpenDesk Parcel — Strict WCAG AA Design Tokens */
+  --color-primary: #111827;
+  /* Gray-900 / Deep Black — guaranteed WCAG AA on white */
+  --color-secondary: #000000;
+  /* Pure Black */
+  --color-accent: #2563EB;
+  /* Vibrant Blue (Brand Primary) */
+  --color-success: #10B981;
+  /* Emerald Green — status indicators only */
+  --color-light: #EFF6FF;
+  /* Ice Blue — subtle tint backgrounds */
+  --color-pale: #E5E7EB;
+  /* Gray-200 — borders and dividers */
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  /* Spec: #FFFFFF Pure White for all primary app canvas backdrops */
+  background-color: #FFFFFF;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ───────────────────────────────────────────
+   Card — Pure White, High-Contrast (no glass)
+─────────────────────────────────────────── */
+.glass-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* ───────────────────────────────────────────
+   Gradient Utilities — Blue Brand Palette
+─────────────────────────────────────────── */
+.bg-brand-gradient {
+  background: linear-gradient(135deg, #111827 0%, #000000 100%);
+}
+
+.bg-accent-gradient {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+}
+
+/* Alias used in some admin pages */
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+}
+
+/* ───────────────────────────────────────────
+   Sidebar Tooltip (tablet icon-strip hover)
+─────────────────────────────────────────── */
+.sidebar-tooltip {
+  position: relative;
+}
+
+.sidebar-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #111827;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 60;
+}
+
+.sidebar-tooltip:hover::after {
+  opacity: 1;
+}
+
+/* ───────────────────────────────────────────
+   Status Badges — Parcel Lifecycle
+─────────────────────────────────────────── */
+.badge-pending_payment {
+  background: rgba(245, 158, 11, 0.1);
+  color: #B45309;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-payment_failed {
+  background: rgba(239, 68, 68, 0.1);
+  color: #B91C1C;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.badge-created {
+  background: rgba(37, 99, 235, 0.08);
+  color: #1D4ED8;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.badge-dispatched {
+  background: rgba(99, 102, 241, 0.08);
+  color: #4338CA;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.badge-arrived {
+  background: rgba(16, 185, 129, 0.08);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge-picked_up {
+  background: rgba(16, 185, 129, 0.08);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* ───────────────────────────────────────────
+   Animations
+─────────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.2);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

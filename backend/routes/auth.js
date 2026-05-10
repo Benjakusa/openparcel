@@ -1,0 +1,80 @@
+const router = require('express').Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const db = require('../db');
+
+// POST /api/auth/register
+router.post('/register', async (req, res) => {
+    const { companyName, adminEmail, adminPassword } = req.body;
+    if (!companyName || !adminEmail || !adminPassword) {
+        return res.status(400).json({ message: 'All fields required' });
+    }
+    try {
+        // Check email uniqueness
+        const exists = await db.query('SELECT id FROM users WHERE email=$1', [adminEmail]);
+        if (exists.rows.length) return res.status(400).json({ message: 'Email already registered' });
+
+        const hash = await bcrypt.hash(adminPassword, 12);
+
+        await db.query('BEGIN');
+        const compRes = await db.query(
+            `INSERT INTO companies (name) VALUES ($1) RETURNING id`,
+            [companyName]
+        );
+        const companyId = compRes.rows[0].id;
+        await db.query(
+            `INSERT INTO users (company_id, email, password_hash, role) VALUES ($1,$2,$3,'company_admin')`,
+            [companyId, adminEmail, hash]
+        );
+        await db.query('COMMIT');
+
+        res.status(201).json({ message: 'Registration successful. Awaiting admin approval.' });
+    } catch (err) {
+        await db.query('ROLLBACK');
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// POST /api/auth/login
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
+    try {
+        const userRes = await db.query(
+            `SELECT u.*, c.name as company_name, c.approved, c.subscription_status, c.trial_end_date, o.name as office_name
+       FROM users u
+       LEFT JOIN companies c ON c.id = u.company_id
+       LEFT JOIN offices o ON o.id = u.office_id
+       WHERE u.email=$1`,
+            [email]
+        );
+        if (!userRes.rows.length) return res.status(401).json({ message: 'Invalid credentials' });
+        const user = userRes.rows[0];
+
+        const match = await bcrypt.compare(password, user.password_hash);
+        if (!match) return res.status(401).json({ message: 'Invalid credentials' });
+
+        // Super admin bypasses approval
+        if (user.role !== 'super_admin') {
+            if (!user.approved) return res.status(403).json({ message: 'Account pending approval.' });
+        }
+
+        const payload = {
+            id: user.id,
+            role: user.role,
+            company_id: user.company_id,
+            office_id: user.office_id,
+            email: user.email,
+            company_name: user.company_name,
+        };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+        res.json({ token, user: payload });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+module.exports = router;
