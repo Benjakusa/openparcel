@@ -53,25 +53,36 @@ router.post('/', auth('office_staff', 'company_admin'), async (req, res) => {
 
         let newStatus = p.status;
         let message = '';
+        let logAction = '';
 
         // Status transitions
         if ((!action || action === 'dispatch') && p.status === 'created' && isSender) {
             newStatus = 'dispatched';
             message = 'Parcel dispatched!';
+            logAction = 'DISPATCHED_PARCEL';
             await db.query('UPDATE parcels SET status=$1, dispatched_at=NOW() WHERE id=$2', [newStatus, p.id]);
             sendWhatsApp(p.receiver_phone, templates.dispatched(p.tracking_id, p.sending_office_name));
         } else if ((!action || action === 'receive') && p.status === 'dispatched' && isReceiver) {
             newStatus = 'arrived';
             message = 'Parcel marked as arrived!';
+            logAction = 'RECEIVED_PARCEL';
             await db.query('UPDATE parcels SET status=$1, arrived_at=NOW() WHERE id=$2', [newStatus, p.id]);
             sendWhatsApp(p.receiver_phone, templates.arrived(p.tracking_id, p.receiving_office_name));
         } else if ((!action || action === 'handover') && p.status === 'arrived' && isReceiver) {
             newStatus = 'picked_up';
             message = 'Parcel handed over successfully!';
+            logAction = 'COLLECTED_PARCEL';
             await db.query('UPDATE parcels SET status=$1, picked_up_at=NOW() WHERE id=$2', [newStatus, p.id]);
             sendWhatsApp(p.sender_phone, templates.pickedUp(p.tracking_id));
         } else {
             return res.status(400).json({ message: `Cannot perform action "${action || 'scan'}" on parcel with status "${p.status}" at this office.` });
+        }
+
+        if (logAction) {
+            await db.query(
+                'INSERT INTO user_logs (company_id, user_id, action, details) VALUES ($1,$2,$3,$4)',
+                [req.user.company_id, req.user.id, logAction, JSON.stringify({ tracking_id: p.tracking_id })]
+            );
         }
 
         res.json({ message, parcel: { ...p, status: newStatus } });

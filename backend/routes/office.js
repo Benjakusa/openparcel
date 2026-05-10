@@ -64,6 +64,13 @@ router.get('/parcels/:id', staffAuth, async (req, res) => {
 });
 
 // POST /api/office/parcels – create parcel + STK Push
+function logUserAction(companyId, userId, action, details) {
+    return db.query(
+        'INSERT INTO user_logs (company_id, user_id, action, details) VALUES ($1,$2,$3,$4)',
+        [companyId, userId, action, JSON.stringify(details)]
+    );
+}
+
 router.post('/parcels', staffAuth, async (req, res) => {
     const { senderName, senderPhone, senderIdNumber, receiverName, receiverPhone, receivingOfficeId, weightKg, paymentMethod } = req.body;
     if (!senderName || !senderPhone || !receiverName || !receiverPhone || !receivingOfficeId || !weightKg) {
@@ -143,6 +150,7 @@ router.post('/parcels', staffAuth, async (req, res) => {
                 `receipt-${trackingId}-receiver.pdf`
             );
 
+            await logUserAction(req.user.company_id, req.user.id, 'CREATED_PARCEL', { tracking_id: trackingId, payment_method: 'cash' });
             return res.status(201).json({ message: 'Parcel created (cash payment)', parcel: { id: parcel.id, parcel_id: parcelId, tracking_id: trackingId, fee }, paymentMethod: 'cash' });
         }
 
@@ -174,6 +182,7 @@ router.post('/parcels', staffAuth, async (req, res) => {
             [parcel.id, req.user.company_id, stkResult.CheckoutRequestID, fee]
         );
 
+        await logUserAction(req.user.company_id, req.user.id, 'CREATED_PARCEL', { tracking_id: parcel.id, payment_method: 'mpesa' });
         res.status(201).json({ message: 'STK Push sent', parcel: { id: parcel.id, fee }, paymentMethod: 'mpesa' });
     } catch (err) {
         console.error('Create parcel error:', err.message);
@@ -210,6 +219,7 @@ router.post('/parcels/:id/retry', staffAuth, async (req, res) => {
         await db.query('UPDATE parcels SET payment_retry_count=payment_retry_count+1, status=$1 WHERE id=$2', ['pending_payment', parcel.id]);
         await db.query(`INSERT INTO parcel_fee_transactions (parcel_id, company_id, checkout_request_id, amount, retry_count) VALUES ($1,$2,$3,$4,$5)`,
             [parcel.id, req.user.company_id, stkResult.CheckoutRequestID, parcel.fee_paid, parcel.payment_retry_count + 1]);
+        await logUserAction(req.user.company_id, req.user.id, 'RETRY_PAYMENT', { tracking_id: parcel.tracking_id });
         res.json({ message: 'Retry STK Push sent' });
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
@@ -230,6 +240,7 @@ router.post('/parcels/:id/resend-whatsapp', staffAuth, async (req, res) => {
         } else if (p.status === 'picked_up') {
             await sendWhatsApp(p.sender_phone, templates.pickedUp(p.tracking_id));
         }
+        await logUserAction(req.user.company_id, req.user.id, 'RESENT_WHATSAPP', { tracking_id: p.tracking_id, status: p.status });
         res.json({ message: 'WhatsApp notification resent' });
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
@@ -355,6 +366,7 @@ router.put('/parcels/tracking/:trackingId/dispatch', staffAuth, async (req, res)
             `UPDATE parcels SET status='dispatched', vehicle_numberplate=$1, dispatched_at=CURRENT_TIMESTAMP WHERE id=$2`,
             [vehicleNumberplate.trim(), parcel.id]
         );
+        await logUserAction(req.user.company_id, req.user.id, 'DISPATCHED_PARCEL', { tracking_id: parcel.tracking_id, vehicle: vehicleNumberplate.trim() });
         res.json({ message: 'Parcel explicitly dispatched' });
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
@@ -382,6 +394,8 @@ router.put('/parcels/tracking/:trackingId/receive', staffAuth, async (req, res) 
             `UPDATE parcels SET status='arrived', arrived_at=CURRENT_TIMESTAMP WHERE id=$1`,
             [parcel.id]
         );
+
+        await logUserAction(req.user.company_id, req.user.id, 'RECEIVED_PARCEL', { tracking_id: parcel.tracking_id });
         
         // WhatsApp notification
         const { rows: officeRows } = await db.query('SELECT name FROM offices WHERE id=$1', [parcel.receiving_office_id]);
@@ -418,6 +432,8 @@ router.put('/parcels/tracking/:trackingId/collect', staffAuth, async (req, res) 
             [parcel.id]
         );
         
+        await logUserAction(req.user.company_id, req.user.id, 'COLLECTED_PARCEL', { tracking_id: parcel.tracking_id });
+
         // WhatsApp notification to sender
         if (parcel.sender_phone) {
             const { sendWhatsApp, templates } = require('../utils/whatsapp');
