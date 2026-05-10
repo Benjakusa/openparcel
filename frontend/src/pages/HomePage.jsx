@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Package, Shield, Smartphone, Zap, CheckCircle, ArrowRight } from 'lucide-react';
+import { Package, Shield, Smartphone, Zap, CheckCircle, ArrowRight, LogIn } from 'lucide-react';
 
 const features = [
     { icon: Package, title: 'Smart Parcel Tracking', desc: 'QR code stickers auto-generated on payment. Full status timeline from dispatch to pickup.' },
@@ -38,22 +38,24 @@ export default function HomePage() {
 
             <div className="relative z-10 flex flex-col min-h-screen">
                 {/* Navbar */}
-                <nav className="sticky top-0 z-50 glass-card bg-white/80 backdrop-blur-xl border-b border-white shadow-sm">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-                        <div className="flex items-center">
-                            {/* Typographic Logo (No Icon) */}
-                            <span className="font-black text-2xl tracking-tight text-slate-900 drop-shadow-sm">
-                                OpenDesk<span className="text-blue-700">Parcel</span>
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-5">
-                            <Link to="/login" className="text-slate-900 font-bold hover:text-blue-700 transition-colors">Login</Link>
-                            <Link to="/register" className="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-slate-800">
-                                Get Started
-                            </Link>
-                        </div>
-                    </div>
-                </nav>
+<nav className="sticky top-0 z-50 glass-card bg-white/80 backdrop-blur-xl border-b border-white shadow-sm">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center">
+            <span className="font-black text-xl sm:text-2xl tracking-tight text-slate-900 drop-shadow-sm">
+                OpenDesk<span className="text-blue-700">Parcel</span>
+            </span>
+        </div>
+        <div className="flex items-center gap-3 sm:gap-5">
+            <Link to="/login" className="text-slate-900 font-bold hover:text-blue-700 transition-colors">
+                <span className="hidden sm:inline">Login</span>
+                <LogIn size={20} className="sm:hidden" />
+            </Link>
+            <Link to="/register" className="bg-slate-900 text-white px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-slate-800">
+                Get Started
+            </Link>
+        </div>
+    </div>
+</nav>
 
                 {/* Hero */}
                 <section className="pt-24 pb-16 px-4">
