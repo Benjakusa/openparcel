@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
 import toast from 'react-hot-toast';
-import { Package, Building2, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import PasswordStrength from '../components/PasswordStrength';
 
 export default function RegisterPage() {
@@ -98,10 +98,6 @@ export default function RegisterPage() {
                                 placeholder="At least 8 characters"
                             />
                             <PasswordStrength password={form.adminPassword} />
-                        </div>
-                        <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4 text-sm text-gray-600 font-medium">
-                            <Package size={16} className="inline mr-2 text-accent" />
-                            Your account will be instantly created and you can log in immediately.
                         </div>
                         <button
                             type="submit"
