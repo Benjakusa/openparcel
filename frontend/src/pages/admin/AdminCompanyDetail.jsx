@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/client';
 import toast from 'react-hot-toast';
 import { ArrowLeft, Building2, Package, DollarSign, Users, MapPin, CreditCard, CheckCircle, XCircle, Clock, RefreshCw, Activity, AlertTriangle, Smartphone, Key } from 'lucide-react';
+import PasswordStrength from '../../components/PasswordStrength';
 
 function ResetPasswordForm({ email, onSave, onCancel }) {
   const [password, setPassword] = useState('');
@@ -39,6 +40,7 @@ function ResetPasswordForm({ email, onSave, onCancel }) {
             <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1.5">New Password</label>
             <input type="password" required placeholder="New secure password" value={password} onChange={e => setPassword(e.target.value)}
               className="w-full bg-white/70 border border-gray-200/60 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all shadow-inner" />
+            <PasswordStrength password={password} />
           </div>
 
           <div className="mt-4 border border-gray-200 rounded-xl overflow-hidden bg-gray-50">

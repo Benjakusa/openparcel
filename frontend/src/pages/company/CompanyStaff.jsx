@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../api/client';
 import toast from 'react-hot-toast';
 import { Plus, Trash2, X, Users, UserPlus, Key } from 'lucide-react';
+import PasswordStrength from '../../components/PasswordStrength';
 
 function ResetPasswordForm({ email, onSave, onCancel }) {
     const [password, setPassword] = useState('');
@@ -38,6 +39,7 @@ function ResetPasswordForm({ email, onSave, onCancel }) {
                         <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1.5">New Password</label>
                         <input type="password" required placeholder="New secure password" value={password} onChange={e => setPassword(e.target.value)}
                             className="w-full bg-white/70 border border-gray-200/60 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all shadow-inner" />
+                        <PasswordStrength password={password} />
                     </div>
 
                     <div className="mt-4 border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
@@ -113,6 +115,7 @@ function StaffForm({ offices, onSave, onCancel }) {
                             <input type={key === 'password' ? 'password' : 'text'} required={req} placeholder={ph}
                                 value={form[key] || ''} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                                 className="w-full bg-white/70 border border-gray-200/60 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner" />
+                            {key === 'password' && <PasswordStrength password={form.password} />}
                         </div>
                     ))}
                     <div className="flex gap-4 pt-4">

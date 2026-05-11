@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/client';
 import toast from 'react-hot-toast';
 import { Package, Building2, CheckCircle } from 'lucide-react';
+import PasswordStrength from '../components/PasswordStrength';
 
 export default function RegisterPage() {
     const [form, setForm] = useState({ companyName: '', adminEmail: '', adminPassword: '', companyPhone: '' });
@@ -11,7 +12,7 @@ export default function RegisterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (form.adminPassword.length < 6) return toast.error('Password must be at least 6 characters');
+        if (form.adminPassword.length < 8) return toast.error('Password must be at least 8 characters');
         setLoading(true);
         try {
             await api.post('/auth/register', form);
@@ -91,12 +92,12 @@ export default function RegisterPage() {
                             <input
                                 type="password"
                                 required
-                                minLength={6}
                                 value={form.adminPassword}
                                 onChange={e => setForm(f => ({ ...f, adminPassword: e.target.value }))}
                                 className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
-                                placeholder="At least 6 characters"
+                                placeholder="At least 8 characters"
                             />
+                            <PasswordStrength password={form.adminPassword} />
                         </div>
                         <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4 text-sm text-gray-600 font-medium">
                             <Package size={16} className="inline mr-2 text-accent" />
