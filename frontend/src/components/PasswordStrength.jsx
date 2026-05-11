@@ -5,7 +5,7 @@ const RULES = [
     { key: 'upper', label: 'One uppercase letter (A-Z)', test: p => /[A-Z]/.test(p) },
     { key: 'lower', label: 'One lowercase letter (a-z)', test: p => /[a-z]/.test(p) },
     { key: 'number', label: 'One number (0-9)', test: p => /[0-9]/.test(p) },
-    { key: 'special', label: 'One special character (!@#$%^&*)', test: p => /[!@#$%^&*(),.?":{}|<>]/.test(p) },
+    { key: 'special', label: 'One special character', test: p => /[!@#$%^&*(),.?":{}|<>]/.test(p) },
 ];
 
 export default function PasswordStrength({ password = '' }) {
