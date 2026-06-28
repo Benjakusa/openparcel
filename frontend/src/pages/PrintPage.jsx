@@ -1,25 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api/client';
 import { ArrowLeft } from 'lucide-react';
+
+function getToken() {
+    try {
+        return sessionStorage.getItem('token');
+    } catch { return null; }
+}
 
 export default function PrintPage() {
     const { id } = useParams();
     const [html, setHtml] = useState('');
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch the print HTML from the backend and display it in an iframe
-        const token = localStorage.getItem('token');
+        const token = getToken();
         fetch(`/api/office/parcels/${id}/print`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(r => r.text())
-            .then(text => {
-                // Write into iframe
-                setHtml(text);
-            });
+            .then(text => { setHtml(text); setLoading(false); })
+            .catch(() => setLoading(false));
     }, [id]);
+
+    if (loading) {
+        return <div className="h-screen w-screen flex items-center justify-center bg-white">Loading sticker...</div>;
+    }
 
     return (
         <div className="h-screen w-screen relative">
@@ -30,7 +37,7 @@ export default function PrintPage() {
                 srcDoc={html}
                 title="Print Sticker"
                 className="w-full h-full border-0"
-                sandbox="allow-scripts allow-same-origin allow-modals"
+                sandbox="allow-scripts allow-modals"
             />
         </div>
     );

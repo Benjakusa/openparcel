@@ -1,12 +1,29 @@
 import axios from 'axios';
 
+function getToken() {
+    try {
+        return sessionStorage.getItem('token');
+    } catch {}
+    return null;
+}
+
+function clearSession() {
+    try {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+    } catch {}
+}
+
 const api = axios.create({
     baseURL: '/api',
     timeout: 30000,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+    },
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -17,20 +34,20 @@ api.interceptors.response.use(
     (res) => res,
     (err) => {
         if (err.response?.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            clearSession();
             window.location.href = '/login';
         }
         if (err.response?.status === 402 || err.response?.status === 403) {
-            const userStr = localStorage.getItem('user');
+            const userStr = sessionStorage.getItem('user');
             if (userStr) {
-                const user = JSON.parse(userStr);
-                // Don't redirect if we're already on the destination page to avoid infinite loops
-                if (user.role === 'company_admin' && !window.location.pathname.includes('/company/subscription')) {
-                    window.location.href = '/company/subscription';
-                } else if (user.role === 'office_staff' && window.location.pathname !== '/suspended') {
-                    window.location.href = '/suspended';
-                }
+                try {
+                    const user = JSON.parse(userStr);
+                    if (user.role === 'company_admin' && !window.location.pathname.includes('/company/subscription')) {
+                        window.location.href = '/company/subscription';
+                    } else if (user.role === 'office_staff' && window.location.pathname !== '/suspended') {
+                        window.location.href = '/suspended';
+                    }
+                } catch {}
             }
         }
         return Promise.reject(err);

@@ -31,14 +31,14 @@ router.get('/companies', adminAuth, async (req, res) => {
         sql += ` ORDER BY ${sortCol} ${order === 'ASC' ? 'ASC' : 'DESC'}`;
         const { rows } = await db.query(sql, params);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Company Detail ─────────
 router.get('/companies/:id', adminAuth, async (req, res) => {
     try {
         const [compRes, statsRes, officesRes, usersRes, recentParcels, recentActivity, transRes] = await Promise.all([
-            db.query('SELECT * FROM companies WHERE id=$1', [req.params.id]),
+            db.query('SELECT id, name, approved, subscription_status, subscription_plan, mpesa_configured, trial_end_date, registered_at, phone, mpesa_environment FROM companies WHERE id=$1', [req.params.id]),
             db.query(`SELECT COUNT(*)::int AS total_parcels,
                         COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '30 days')::int AS parcels_30d,
                         COUNT(*) FILTER (WHERE status='pending_payment')::int AS pending_payments,
@@ -66,7 +66,7 @@ router.get('/companies/:id', adminAuth, async (req, res) => {
             recent_parcels: recentParcels.rows,
             recent_activity: recentActivity.rows,
         });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Company Users ─────────
@@ -79,7 +79,7 @@ router.get('/companies/:id/users', adminAuth, async (req, res) => {
              WHERE u.company_id=$1 AND u.role != 'super_admin'
              ORDER BY u.created_at DESC`, [req.params.id]);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Company Parcels ─────────
@@ -99,7 +99,7 @@ router.get('/companies/:id/parcels', adminAuth, async (req, res) => {
         params.push(parseInt(limit), offset);
         const { rows } = await db.query(sql, params);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Company Transactions ─────────
@@ -113,7 +113,7 @@ router.get('/companies/:id/transactions', adminAuth, async (req, res) => {
              FROM parcel_fee_transactions WHERE company_id=$1)
             ORDER BY created_at DESC LIMIT 50`, [req.params.id]);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Company Activity ─────────
@@ -126,7 +126,7 @@ router.get('/companies/:id/activity', adminAuth, async (req, res) => {
              WHERE ul.company_id=$1 ORDER BY ul.created_at DESC LIMIT $2`,
             [req.params.id, parseInt(limit)]);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Approve Company ─────────
@@ -135,7 +135,7 @@ router.put('/companies/:id/approve', adminAuth, async (req, res) => {
         await db.query('UPDATE companies SET approved=TRUE WHERE id=$1', [req.params.id]);
         console.log(`[Admin] Company ${req.params.id} approved`);
         res.json({ message: 'Company approved' });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Suspend Company ─────────
@@ -143,7 +143,7 @@ router.put('/companies/:id/suspend', adminAuth, async (req, res) => {
     try {
         await db.query(`UPDATE companies SET subscription_status='suspended', approved=FALSE WHERE id=$1`, [req.params.id]);
         res.json({ message: 'Company suspended' });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Extend Trial ─────────
@@ -154,7 +154,7 @@ router.put('/companies/:id/extend-trial', adminAuth, async (req, res) => {
             `UPDATE companies SET trial_end_date = GREATEST(trial_end_date, NOW()) + $1::interval WHERE id=$2`,
             [`${days} days`, req.params.id]);
         res.json({ message: `Trial extended by ${days} days` });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Change Plan ─────────
@@ -164,7 +164,7 @@ router.put('/companies/:id/change-plan', adminAuth, async (req, res) => {
         if (!['monthly', 'yearly', 'trialing'].includes(plan)) return res.status(400).json({ message: 'Invalid plan' });
         await db.query('UPDATE companies SET subscription_plan=$1 WHERE id=$2', [plan, req.params.id]);
         res.json({ message: `Plan changed to ${plan}` });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Reset User Password (Super Admin) ─────────
@@ -185,7 +185,7 @@ router.put('/companies/:id/users/:userId/reset-password', adminAuth, async (req,
         res.json({ message: 'Password reset successfully' + (wipeData ? ' AND associated logs wiped' : '') });
     } catch (err) {
         await client.query('ROLLBACK');
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: 'Server error' });
     } finally {
         client.release();
     }
@@ -196,7 +196,7 @@ router.put('/companies/:id/users/:userId/deactivate', adminAuth, async (req, res
     try {
         await db.query('UPDATE users SET active=FALSE WHERE id=$1 AND company_id=$2', [req.params.userId, req.params.id]);
         res.json({ message: 'User deactivated' });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Platform Stats ─────────
@@ -216,7 +216,7 @@ router.get('/stats', adminAuth, async (req, res) => {
             db.query(`SELECT COUNT(*)::int AS subs_active FROM platform_subscription_transactions WHERE status='success'`),
         ]);
         res.json({ ...comp.rows[0], ...parcels.rows[0], ...revenue.rows[0], ...subs.rows[0] });
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Revenue Chart Data ─────────
@@ -230,7 +230,7 @@ router.get('/stats/revenue', adminAuth, async (req, res) => {
             WHERE created_at >= NOW() - $1::interval AND status='success'
             GROUP BY day ORDER BY day`, [`${days} days`]);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Parcel Volume Chart Data ─────────
@@ -242,7 +242,7 @@ router.get('/stats/parcels', adminAuth, async (req, res) => {
             FROM parcels WHERE created_at >= NOW() - $1::interval
             GROUP BY day ORDER BY day`, [`${days} days`]);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── New Clients Chart Data ─────────
@@ -254,7 +254,7 @@ router.get('/stats/clients', adminAuth, async (req, res) => {
             FROM companies WHERE registered_at >= NOW() - $1::interval
             GROUP BY day ORDER BY day`, [`${days} days`]);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Top Clients ─────────
@@ -266,7 +266,7 @@ router.get('/stats/top-clients', adminAuth, async (req, res) => {
             LEFT JOIN parcels p ON p.company_id = c.id
             GROUP BY c.id ORDER BY parcel_count DESC LIMIT 10`);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Platform Activity ─────────
@@ -287,7 +287,7 @@ router.get('/activity', adminAuth, async (req, res) => {
         params.push(parseInt(limit), offset);
         const { rows } = await db.query(sql, params);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Platform Transactions ─────────
@@ -317,7 +317,7 @@ router.get('/transactions', adminAuth, async (req, res) => {
         params.push(parseInt(limit), offset);
         const { rows } = await db.query(sql, params);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── Subscriptions List ─────────
@@ -338,7 +338,7 @@ router.get('/subscriptions', adminAuth, async (req, res) => {
         params.push(parseInt(limit), offset);
         const { rows } = await db.query(sql, params);
         res.json(rows);
-    } catch (err) { res.status(500).json({ message: err.message }); }
+    } catch (err) { res.status(500).json({ message: 'Server error' }); }
 });
 
 // ───────── System Health ─────────
@@ -361,7 +361,8 @@ router.get('/health', adminAuth, async (req, res) => {
             uptime: process.uptime(),
         });
     } catch (err) {
-        res.json({ db_status: 'error', message: err.message });
+        console.error('Health check error', err);
+        res.json({ db_status: 'error', message: 'Server error' });
     }
 });
 
@@ -383,7 +384,7 @@ router.delete('/companies/:id', adminAuth, async (req, res) => {
         res.json({ message: 'Company successfully deleted' });
     } catch (err) {
         await client.query('ROLLBACK');
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: 'Server error' });
     } finally {
         client.release();
     }
