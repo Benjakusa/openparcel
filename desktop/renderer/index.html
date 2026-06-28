@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDesk Parcel - Track Your Parcel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#011f4b;--primary-light:#023b86;--accent:#f5a623;--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--text-muted:#6b7280;--border:#e5e7eb;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06)}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-y:scroll}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.header{background:var(--primary);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.15);-webkit-app-region:drag;user-select:none}
+.header-title{font-size:18px;font-weight:700;letter-spacing:.5px}
+.header-subtitle{font-size:12px;color:rgba(255,255,255,.7);-webkit-app-region:no-drag}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-right{display:flex;align-items:center;gap:8px}
+.icon-btn{background:rgba(255,255,255,.1);border:none;color:#fff;cursor:pointer;padding:8px;border-radius:6px;display:flex;-webkit-app-region:no-drag;transition:background .2s}
+.icon-btn:hover{background:rgba(255,255,255,.2)}
+.back-btn{background:none;border:none;color:#fff;cursor:pointer;padding:4px;display:flex;-webkit-app-region:no-drag}
+.main{flex:1;padding:24px;max-width:800px;width:100%;margin:0 auto}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:16px}
+.input-group{display:flex;gap:12px;margin-bottom:16px}
+.input-group input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius);font-size:16px;font-family:inherit;outline:0;text-transform:uppercase;letter-spacing:2px;font-weight:600;transition:border-color .2s}
+.input-group input:focus{border-color:var(--primary)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-light)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.status-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.status-pending_payment,.status-payment_failed{background:#fef3c7;color:#92400e}
+.status-created{background:#dbeafe;color:#1e40af}
+.status-dispatched{background:#e0e7ff;color:#3730a3}
+.status-arrived{background:#d1fae5;color:#065f46}
+.status-picked_up{background:#ede9fe;color:#5b21b6}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.detail{padding:12px;background:var(--bg);border-radius:6px}
+.detail-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:4px}
+.detail-value{font-size:15px;font-weight:500}
+.timeline{position:relative;padding-left:28px;margin-top:20px}
+.timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--border)}
+.timeline-item{position:relative;padding-bottom:20px}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-dot{position:absolute;left:-24px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--border);border:2px solid var(--card)}
+.timeline-dot.active{background:var(--primary);border-color:var(--primary)}
+.timeline-date{font-size:12px;color:var(--text-muted);margin-bottom:2px}
+.timeline-label{font-size:14px;font-weight:500}
+.error{background:#fef2f2;color:var(--danger);padding:12px 16px;border-radius:var(--radius);margin-bottom:16px;font-size:14px;border:1px solid #fecaca}
+.loading{text-align:center;padding:40px;color:var(--text-muted)}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{text-align:center;padding:16px;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border)}
+.action-bar{display:flex;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.page{display:block}
+.page.hidden{display:none}
+.settings-section{margin-bottom:20px}
+.settings-section h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
+.settings-section input{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:inherit;outline:0}
+.settings-section input:focus{border-color:var(--primary)}
+.settings-section .hint{font-size:12px;color:var(--text-muted);margin-top:4px}
+.help-box{padding:12px;background:var(--bg);border-radius:6px;font-size:13px;color:var(--text-muted);line-height:1.8}
+.tag-group{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-block;padding:6px 14px;border:2px solid var(--border);border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;color:var(--text);background:transparent;transition:all .2s;font-family:inherit}
+.tag:hover{border-color:var(--primary);color:var(--primary)}
+.test-result{margin-top:16px;padding:12px;border-radius:6px;font-size:13px;display:flex;align-items:center;gap:8px}
+.test-result.ok{background:#d1fae5;color:#065f46}
+.test-result.fail{background:#fef2f2;color:#991b1b}
+.company-info{margin-top:16px;padding:12px;background:var(--bg);border-radius:6px;font-size:13px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="app">
+    <header class="header">
+        <div class="header-left">
+            <button id="backBtn" class="back-btn" style="display:none" onclick="showPage('track')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M5 12h14M5 7h10"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            <div>
+                <div class="header-title">OpenDesk Parcel</div>
+                <div class="header-subtitle">Parcel Tracking Client</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn" onclick="toggleSettings()" title="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Track Page -->
+        <div id="pageTrack" class="page">
+            <div class="card" style="text-align:center;padding:40px 24px">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" style="margin-bottom:16px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                <h2 style="font-size:22px;font-weight:700;margin-bottom:8px">Track Your Parcel</h2>
+                <p style="color:var(--text-muted);margin-bottom:24px;font-size:14px">Enter your tracking ID to see the current status and location of your parcel</p>
+                <form id="trackForm" onsubmit="return trackParcel(event)">
+                    <div class="input-group">
+                        <input type="text" id="trackingInput" placeholder="Enter tracking ID (e.g. ABC12)" maxlength="10" autofocus>
+                        <button type="submit" class="btn btn-primary" id="trackBtn">Track</button>
+                    </div>
+                </form>
+            </div>
+            <div id="recentSearches" class="card" style="display:none"></div>
+            <div class="card help-box">
+                <strong>How to track:</strong><br>
+                1. Look for the tracking ID on your receipt or WhatsApp message<br>
+                2. Enter the ID above and click Track<br>
+                3. View real-time status of your parcel from dispatch to delivery
+            </div>
+        </div>
+
+        <!-- Detail Page -->
+        <div id="pageDetail" class="page hidden">
+            <div id="detailContent"></div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="pageSettings" class="page hidden">
+            <div class="card">
+                <h2 style="font-size:18px;font-weight:700;margin-bottom:20px">Server Settings</h2>
+                <div class="settings-section">
+                    <h3>Backend API URL</h3>
+                    <input type="text" id="apiUrlInput" placeholder="https://your-backend.com">
+                    <div class="hint">The URL of your OpenDesk Parcel backend server.</div>
+                </div>
+                <div style="display:flex;gap:8px">
+                    <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+                    <button class="btn btn-outline" id="testBtn" onclick="testConnection()">Test Connection</button>
+                </div>
+                <div id="testResult"></div>
+            </div>
+            <div class="card help-box">
+                <strong>About</strong><br>
+                OpenDesk Parcel Desktop Client v1.0.0<br>
+                This application connects to an OpenDesk Parcel backend to allow customers to track parcels in real-time.
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        OpenDesk Parcel Client v1.0.0 &mdash; Track your parcels in real-time
+    </footer>
+</div>
+
+<script>
+const DEFAULT_API = 'https://openparcel-5f7k.onrender.com';
+const STATUS_MAP = {
+    pending_payment:'Pending Payment', payment_failed:'Payment Failed',
+    created:'Parcel Created', dispatched:'In Transit',
+    arrived:'Arrived at Destination', picked_up:'Picked Up'
+};
+const TIMELINE = [
+    {key:'created',label:'Parcel Created'},
+    {key:'dispatched',label:'Dispatched'},
+    {key:'arrived',label:'Arrived at Office'},
+    {key:'picked_up',label:'Picked Up'}
+];
+
+let currentTrackingId = null;
+
+function getApiUrl() {
+    try { return localStorage.getItem('od_api_url') || DEFAULT_API; } catch { return DEFAULT_API; }
+}
+
+function showPage(name) {
+    document.getElementById('pageTrack').style.display = name === 'track' ? 'block' : 'none';
+    document.getElementById('pageDetail').style.display = name === 'detail' ? 'block' : 'none';
+    document.getElementById('pageSettings').style.display = name === 'settings' ? 'block' : 'none';
+    document.getElementById('backBtn').style.display = name === 'track' ? 'none' : 'inline-flex';
+    if (name === 'settings') {
+        document.getElementById('apiUrlInput').value = getApiUrl();
+    }
+}
+
+function toggleSettings() {
+    const curr = document.getElementById('pageSettings').style.display;
+    if (curr === 'block') showPage('track');
+    else showPage('settings');
+}
+
+function saveSettings() {
+    const url = document.getElementById('apiUrlInput').value.replace(/\/+$/, '');
+    try { localStorage.setItem('od_api_url', url); } catch {}
+    document.getElementById('apiUrlInput').value = url;
+}
+
+async function testConnection() {
+    const btn = document.getElementById('testBtn');
+    const result = document.getElementById('testResult');
+    btn.disabled = true;
+    btn.textContent = 'Testing...';
+    result.innerHTML = '';
+    try {
+        const url = document.getElementById('apiUrlInput').value.replace(/\/+$/, '');
+        const res = await fetch(url + '/health');
+        result.className = 'test-result ' + (res.ok ? 'ok' : 'fail');
+        result.innerHTML = (res.ok ? '&#10003;' : '&#9888;') + ' ' + (res.ok ? 'Connection successful!' : 'Server returned status ' + res.status);
+    } catch(e) {
+        result.className = 'test-result fail';
+        result.innerHTML = '&#9888; Connection failed: ' + e.message;
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Test Connection';
+    }
+}
+
+function trackParcel(e) {
+    e.preventDefault();
+    const id = document.getElementById('trackingInput').value.trim().toUpperCase();
+    if (!id) return false;
+    currentTrackingId = id;
+    // Save to recent
+    let recent = [];
+    try { recent = JSON.parse(localStorage.getItem('od_recent') || '[]'); } catch {}
+    recent = [id, ...recent.filter(s => s !== id)].slice(0, 5);
+    try { localStorage.setItem('od_recent', JSON.stringify(recent)); } catch {}
+    showRecent();
+    fetchParcel(id);
+    return false;
+}
+
+function showRecent() {
+    let recent = [];
+    try { recent = JSON.parse(localStorage.getItem('od_recent') || '[]'); } catch {}
+    const el = document.getElementById('recentSearches');
+    if (!recent.length) { el.style.display = 'none'; return; }
+    el.style.display = 'block';
+    el.innerHTML = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span style="font-size:13px;font-weight:600;color:var(--text-muted)">Recent Searches</span></div><div class="tag-group">' +
+        recent.map(id => '<button class="tag" onclick="searchRecent(\'' + id + '\')">' + id + '</button>').join('') + '</div>';
+}
+
+function searchRecent(id) {
+    currentTrackingId = id;
+    fetchParcel(id);
+}
+
+async function fetchParcel(id) {
+    const api = getApiUrl();
+    const content = document.getElementById('detailContent');
+    content.innerHTML = '<div class="card loading"><div class="spinner"></div><p>Looking up parcel ' + id + '...</p></div>';
+    showPage('detail');
+    try {
+        const res = await fetch(api + '/api/track/' + encodeURIComponent(id));
+        if (res.status === 404) {
+            content.innerHTML = '<div class="error">Parcel not found. Please check the tracking ID and try again.</div>' +
+                '<button class="btn btn-outline" onclick="showPage(\'track\')">Back to Search</button>';
+            return;
+        }
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            content.innerHTML = '<div class="error">' + (data.message || 'Failed to fetch parcel details.') + '</div>' +
+                '<button class="btn btn-outline" onclick="showPage(\'track\')">Back to Search</button>';
+            return;
+        }
+        const p = await res.json();
+        renderParcel(p);
+    } catch(e) {
+        content.innerHTML = '<div class="error">Failed to connect to server. Check your connection and server settings.</div>' +
+            '<button class="btn btn-outline" onclick="showPage(\'track\')">Back to Search</button>';
+    }
+}
+
+function getStatusIndex(s) {
+    return ['pending_payment','payment_failed','created','dispatched','arrived','picked_up'].indexOf(s);
+}
+
+function formatDate(d) {
+    if (!d) return null;
+    return new Date(d).toLocaleDateString('en-KE', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+function renderParcel(p) {
+    const si = getStatusIndex(p.status);
+    const el = document.getElementById('detailContent');
+    el.innerHTML = '<div class="card">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+            '<div><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">TRACKING ID</div>' +
+            '<div style="font-size:24px;font-weight:800;letter-spacing:3px;color:var(--primary)">' + p.tracking_id + '</div></div>' +
+            '<span class="status-badge status-' + p.status + '">' + (STATUS_MAP[p.status] || p.status) + '</span>' +
+        '</div>' +
+        '<div class="grid">' +
+            '<div class="detail"><div class="detail-label">Sender</div><div class="detail-value">' + esc(p.sender_name) + '</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">' + esc(p.sender_phone) + '</div></div>' +
+            '<div class="detail"><div class="detail-label">Receiver</div><div class="detail-value">' + esc(p.receiver_name) + '</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">' + esc(p.receiver_phone) + '</div></div>' +
+            '<div class="detail"><div class="detail-label">From</div><div class="detail-value">' + esc(p.sending_office?.name || 'N/A') + '</div></div>' +
+            '<div class="detail"><div class="detail-label">To</div><div class="detail-value">' + esc(p.receiving_office?.name || 'N/A') + '</div></div>' +
+            '<div class="detail"><div class="detail-label">Weight</div><div class="detail-value">' + p.weight_kg + ' kg</div></div>' +
+            '<div class="detail"><div class="detail-label">Fee Paid</div><div class="detail-value">KES ' + (p.fee_paid || 0).toLocaleString() + '</div></div>' +
+        '</div>' +
+        (p.company ? '<div class="company-info">Managed by <strong>' + esc(p.company.name) + '</strong>' + (p.company.phone ? ' &middot; ' + esc(p.company.phone) : '') + '</div>' : '') +
+    '</div>' +
+    '<div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:16px">Journey Timeline</h3><div class="timeline">' +
+        TIMELINE.map((step, idx) => {
+            const active = si >= getStatusIndex(step.key) && p.status !== 'pending_payment' && p.status !== 'payment_failed';
+            const date = p.timeline ? p.timeline[step.key] : null;
+            return '<div class="timeline-item">' +
+                '<div class="timeline-dot ' + (active ? 'active' : '') + '"></div>' +
+                '<div class="timeline-date">' + (active && date ? formatDate(date) : active ? 'Completed' : 'Pending') + '</div>' +
+                '<div class="timeline-label" style="color:' + (active ? 'var(--text)' : 'var(--text-muted)') + '">' + step.label + '</div>' +
+            '</div>';
+        }).join('') +
+    '</div></div>' +
+    '<div class="action-bar">' +
+        '<button class="btn btn-outline" onclick="showPage(\'track\')">Back to Search</button>' +
+        '<button class="btn btn-outline" onclick="refreshParcel()">Refresh</button>' +
+    '</div>';
+}
+
+function refreshParcel() {
+    if (currentTrackingId) fetchParcel(currentTrackingId);
+}
+
+function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+    showRecent();
+    document.getElementById('apiUrlInput').value = getApiUrl();
+    document.getElementById('trackingInput').focus();
+});
+</script>
+</body>
+</html>

@@ -29,12 +29,13 @@ async function runMigrations() {
     }
 }
 
-// CORS – allow Vercel frontend and dev origin
+// CORS – allow Vercel frontend, dev, and desktop client
 app.use(cors({
     origin: [
         'https://opendesk-seven.vercel.app',
         'http://localhost:5173',
         'http://localhost:4173',
+        'file://',
     ],
     credentials: true,
 }));
@@ -58,6 +59,7 @@ app.use('/api/company', require('./routes/company'));
 app.use('/api/office', require('./routes/office'));
 app.use('/api/scan', require('./routes/scan'));
 app.use('/api/mpesa', require('./routes/mpesaCallback'));
+app.use('/api/track', require('./routes/track'));
 
 // Static frontend in production
 if (process.env.NODE_ENV === 'production') {
