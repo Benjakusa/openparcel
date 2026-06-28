@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../db');
 const { auth } = require('../middleware/auth');
 const { encrypt, decrypt } = require('../utils/encryption');
+const { logRead } = require('../utils/audit');
 const { stkPush } = require('../utils/mpesa');
 const { generateQR } = require('../utils/qr');
 const { generateReceipt } = require('../utils/pdf');
@@ -92,6 +93,7 @@ router.get('/parcels/:id', staffAuth, async (req, res) => {
             p.sender_id_masked = decrypted.length > 4 ? '***' + decrypted.slice(-4) : '****';
         }
         delete p.sender_id_number;
+        logRead(req.user.id, req.user.company_id, 'VIEW_PARCEL_DETAIL', { parcel_id: p.id, tracking_id: p.tracking_id });
         res.json(p);
     } catch (err) { getLogger(req).error('Operation error', { error: err.message }); res.status(500).json({ message: 'Server error' }); }
 });
@@ -335,6 +337,7 @@ router.get('/parcels/:id/receipt', staffAuth, async (req, res) => {
             const dec = decrypt(p.sender_id_number) || '';
             p.sender_id_number = dec.length > 4 ? '***' + dec.slice(-4) : '****';
         }
+        logRead(req.user.id, req.user.company_id, 'VIEW_RECEIPT', { parcel_id: p.id, tracking_id: p.tracking_id, receipt_type: type });
         const pdf = await generateReceipt(p, type);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `inline; filename="receipt-${p.tracking_id}-${type}.pdf"`);

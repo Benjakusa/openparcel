@@ -1,5 +1,20 @@
+// Load env from .env file, then overlay _FILE suffixed vars (Docker secret style)
 require('dotenv').config();
 const fs = require('fs');
+function loadSecretsFromFiles() {
+    for (const key of Object.keys(process.env)) {
+        if (key.endsWith('_FILE')) {
+            const realKey = key.slice(0, -5);
+            try {
+                process.env[realKey] = fs.readFileSync(process.env[key], 'utf8').trim();
+            } catch (err) {
+                console.error(`[SECRET] Failed to read ${process.env[key]} for ${realKey}: ${err.message}`);
+            }
+        }
+    }
+}
+loadSecretsFromFiles();
+
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -36,10 +51,13 @@ app.use(helmet({
             connectSrc: ["'self'", "https://openparcel-5f7k.onrender.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             frameSrc: ["'self'"],
+            reportUri: '/api/csp-report',
         },
     },
     hsts: { maxAge: 63072000, includeSubDomains: true, preload: true },
 }));
+
+const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '12', 10);
 
 // CORS – strict allowlist only
 const allowedOrigins = [
@@ -62,16 +80,22 @@ app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 // Logging
 app.use(morgan('combined', { stream: { write: msg => logger.info(msg.trim()) } }));
 
-// Rate limiting
+// Rate limiting – each route group gets its own limiter to prevent double-counting
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
-const apiLimiter = rateLimit({ windowMs: 60 * 1000, max: 200, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
 const trackLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, message: { message: 'Too many tracking requests' }, standardHeaders: true, legacyHeaders: false });
 const mpesaLimiter = rateLimit({ windowMs: 60 * 1000, max: 60, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
+const adminLimiter = rateLimit({ windowMs: 60 * 1000, max: 60, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
+const companyLimiter = rateLimit({ windowMs: 60 * 1000, max: 120, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
+const officeLimiter = rateLimit({ windowMs: 60 * 1000, max: 120, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
+const scanLimiter = rateLimit({ windowMs: 60 * 1000, max: 60, message: { message: 'Too many requests' }, standardHeaders: true, legacyHeaders: false });
 
 app.use('/api/auth', authLimiter);
 app.use('/api/track', trackLimiter);
 app.use('/api/mpesa', mpesaLimiter);
-app.use('/api/', apiLimiter);
+app.use('/api/admin', adminLimiter);
+app.use('/api/company', companyLimiter);
+app.use('/api/office', officeLimiter);
+app.use('/api/scan', scanLimiter);
 
 // Request validation helper
 const { z } = require('zod');
@@ -123,6 +147,16 @@ app.use('/api/scan', require('./routes/scan'));
 app.use('/api/track', require('./routes/track'));
 
 app.use('/api/mpesa', require('./routes/mpesaCallback'));
+
+// SSO routes (conditionally enabled when OAuth provider env vars are set)
+app.use('/api/sso', require('./routes/sso'));
+
+// CSP violation reporting endpoint
+app.post('/api/csp-report', (req, res) => {
+    const report = req.body?.['csp-report'] || req.body;
+    logger.warn('CSP violation', { report });
+    res.status(204).end();
+});
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -212,7 +246,7 @@ async function runMigrations() {
 async function seedDefaults() {
     try {
         const bcrypt = require('bcryptjs');
-        const hash = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD || 'admin123', 12);
+        const hash = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD || 'admin123', BCRYPT_ROUNDS);
         await db.query(`
       INSERT INTO users (email, password_hash, role)
       VALUES ('admin@opendesk.com', $1, 'super_admin')

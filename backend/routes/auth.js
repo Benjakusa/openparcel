@@ -84,7 +84,8 @@ router.post('/register', async (req, res) => {
         const exists = await db.query('SELECT id FROM users WHERE email=$1', [adminEmail]);
         if (exists.rows.length) return res.status(400).json({ message: 'Email already registered' });
 
-        const hash = await bcrypt.hash(adminPassword, 12);
+        const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '12', 10);
+        const hash = await bcrypt.hash(adminPassword, BCRYPT_ROUNDS);
         const verificationToken = crypto.randomBytes(32).toString('hex');
 
         await db.query('BEGIN');
@@ -145,7 +146,10 @@ router.post('/login', async (req, res) => {
         }
 
         const userRes = await db.query(
-            `SELECT u.*, c.name as company_name, c.approved, c.subscription_status, c.trial_end_date, o.name as office_name
+            `SELECT u.id, u.email, u.password_hash, u.role, u.company_id, u.office_id, u.full_name,
+                    u.email_verified, u.failed_login_count, u.last_failed_at, u.account_locked_until,
+                    c.name as company_name, c.approved, c.subscription_status, c.trial_end_date,
+                    o.name as office_name
              FROM users u
              LEFT JOIN companies c ON c.id = u.company_id
              LEFT JOIN offices o ON o.id = u.office_id
@@ -201,7 +205,8 @@ router.post('/refresh', async (req, res) => {
         if (!refresh_token) return res.status(400).json({ message: 'Refresh token required' });
 
         const { rows } = await db.query(
-            `SELECT rt.*, u.email, u.role, u.company_id, u.office_id, c.name as company_name
+            `SELECT rt.id, rt.user_id, rt.token, rt.expires_at, rt.revoked, rt.created_at,
+                    u.email, u.role, u.company_id, u.office_id, c.name as company_name
              FROM refresh_tokens rt
              JOIN users u ON u.id = rt.user_id
              LEFT JOIN companies c ON c.id = u.company_id

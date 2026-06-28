@@ -2,6 +2,7 @@ const router = require('express').Router();
 const db = require('../db');
 const { auth } = require('../middleware/auth');
 const bcrypt = require('bcryptjs');
+const { logRead } = require('../utils/audit');
 
 const adminAuth = auth('super_admin');
 
@@ -57,6 +58,7 @@ router.get('/companies/:id', adminAuth, async (req, res) => {
         ]);
         if (!compRes.rows.length) return res.status(404).json({ message: 'Not found' });
         const company = compRes.rows[0];
+        logRead(req.user.id, req.user.company_id, 'ADMIN_VIEW_COMPANY', { company_id: req.params.id });
         res.json({
             ...company,
             ...statsRes.rows[0],
