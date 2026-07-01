@@ -13,11 +13,8 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await api.post('/auth/forgot-password', { email });
+            await api.post('/auth/forgot-password', { email });
             setSent(true);
-            if (data.reset_token) {
-                toast.success(`Dev mode — reset token: ${data.reset_token}`);
-            }
         } catch (err) {
             toast.error(err.response?.data?.message || 'Something went wrong');
         } finally {
@@ -31,8 +28,11 @@ export default function ForgotPasswordPage() {
                 <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn shadow-2xl">
                     <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
                     <h2 className="text-2xl font-black text-primary mb-3">Check Your Email</h2>
-                    <p className="text-gray-500 mb-6 font-medium">
+                    <p className="text-gray-500 mb-2 font-medium">
                         If that email is registered, we've sent a password reset link.
+                    </p>
+                    <p className="text-xs text-gray-400 mb-6">
+                        (In dev mode, check the server console for the reset token)
                     </p>
                     <Link to="/login" className="text-accent font-bold hover:underline">Back to login</Link>
                 </div>

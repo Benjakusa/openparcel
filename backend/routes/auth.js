@@ -271,12 +271,11 @@ router.post('/forgot-password', async (req, res) => {
         const emailConfigured = !!(process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS);
         if (emailConfigured) {
             sendPasswordResetEmail(email, token).catch(err => console.error('[EMAIL] Failed to send reset:', err));
+        } else {
+            console.log(`[RESET] Password reset token for ${email}: ${token}`);
         }
 
-        res.json({
-            message: 'If that email is registered, a reset link has been sent.',
-            reset_token: emailConfigured ? undefined : token,
-        });
+        res.json({ message: 'If that email is registered, a reset link has been sent.' });
     } catch (err) {
         if (err instanceof z.ZodError) {
             return res.status(400).json({ message: 'Validation error', errors: err.errors.map(e => ({ path: e.path.join('.'), message: e.message })) });
