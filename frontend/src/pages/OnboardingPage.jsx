@@ -13,7 +13,7 @@ export default function OnboardingPage() {
                     <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <Package size={32} className="text-white" strokeWidth={2} />
                     </div>
-                    <h1 className="font-black text-3xl tracking-tight text-slate-900">
+                    <h1 className="font-black text-xl tracking-tight text-slate-900">
                         OpenDesk<span className="text-blue-700">Parcel</span>
                     </h1>
                     <p className="text-slate-500 text-sm font-medium mt-2">

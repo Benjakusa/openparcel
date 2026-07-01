@@ -41,7 +41,7 @@ export default function HomePage() {
 <nav className="sticky top-0 z-50 glass-card bg-white/80 backdrop-blur-xl border-b border-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
         <div className="flex items-center">
-            <span className="font-black text-xl sm:text-2xl tracking-tight text-slate-900">
+            <span className="font-black text-base sm:text-xl tracking-tight text-slate-900">
                 OpenDesk<span className="text-blue-700">Parcel</span>
             </span>
         </div>

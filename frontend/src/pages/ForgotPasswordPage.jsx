@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
         <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fadeIn mt-8 mb-12">
                 <div className="text-center mb-8">
-                    <span className="font-black text-4xl tracking-tight text-slate-900">
+                    <span className="font-black text-2xl tracking-tight text-slate-900">
                         OpenDesk<span className="text-blue-700">Parcel</span>
                     </span>
                 </div>
