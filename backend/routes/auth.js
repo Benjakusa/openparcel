@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { z } = require('zod');
 const db = require('../db');
+const { sendVerificationEmail } = require('../utils/email');
 
 const passwordSchema = z.string()
     .min(8, 'Password must be at least 8 characters')
@@ -94,19 +95,22 @@ router.post('/register', async (req, res) => {
             [companyName, companyPhone || null]
         );
         const companyId = compRes.rows[0].id;
+        const emailConfigured = !!(process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS);
         await db.query(
-            `INSERT INTO users (company_id, email, password_hash, role, email_verification_token, email_verification_sent_at)
-             VALUES ($1, $2, $3, 'company_admin', $4, NOW())`,
-            [companyId, adminEmail, hash, verificationToken]
+            `INSERT INTO users (company_id, email, password_hash, role, email_verification_token, email_verification_sent_at, email_verified)
+             VALUES ($1, $2, $3, 'company_admin', $4, NOW(), $5)`,
+            [companyId, adminEmail, hash, verificationToken, !emailConfigured]
         );
         await db.query('COMMIT');
-
-        // In production, send verification email here
-        // sendVerificationEmail(adminEmail, verificationToken);
+        if (emailConfigured) {
+            sendVerificationEmail(adminEmail, verificationToken).catch(err => console.error('[EMAIL] Failed to send:', err));
+        }
 
         res.status(201).json({
-            message: 'Registration successful. Please check your email to verify your account before logging in.',
-            verification_token: process.env.NODE_ENV !== 'production' ? verificationToken : undefined,
+            message: emailConfigured
+                ? 'Registration successful. Please check your email to verify your account before logging in.'
+                : 'Registration successful. You can now log in.',
+            verification_token: emailConfigured ? undefined : verificationToken,
         });
     } catch (err) {
         if (err instanceof z.ZodError) {
