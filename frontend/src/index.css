@@ -16,21 +16,30 @@
   /* Gray-200 — borders and dividers */
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   color: #111827;
   -webkit-font-smoothing: antialiased;
-  /* Spec: #FFFFFF Pure White for all primary app canvas backdrops */
   background-color: #FFFFFF;
   overflow-x: hidden;
   position: relative;
 }
+
+/* ───────────────────────────────────────────
+   Typography — Segoe UI System Font Stack
+─────────────────────────────────────────── */
+.text-h1 { font-size: 19px; font-weight: 600; line-height: 1.3; }
+.text-h2 { font-size: 15.5px; font-weight: 600; line-height: 1.35; }
+.text-h3 { font-size: 13.5px; font-weight: 600; line-height: 1.4; }
+.text-body { font-size: 13px; font-weight: 400; line-height: 1.5; }
+.text-table { font-size: 12.5px; font-weight: 500; line-height: 1.4; }
+.text-label { font-size: 11px; font-weight: 500; line-height: 1.3; }
+.text-micro { font-size: 10.5px; font-weight: 500; line-height: 1.2; }
+.text-kpi { font-size: 22px; font-weight: 600; line-height: 1.1; }
 
 /* Custom minimal scrollbar */
 ::-webkit-scrollbar {
