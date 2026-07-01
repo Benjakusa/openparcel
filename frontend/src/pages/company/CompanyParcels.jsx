@@ -18,7 +18,7 @@ export default function CompanyParcels() {
         if (filters.status) params.set('status', filters.status);
         if (filters.office_id) params.set('office_id', filters.office_id);
         setLoading(true);
-        api.get(`/company/parcels?${params}`).then(r => setParcels(r.data)).catch(() => { }).finally(() => setLoading(false));
+        api.get(`/company/parcels?${params}`).then(r => setParcels(r.data.parcels || [])).catch(() => { }).finally(() => setLoading(false));
     };
 
     useEffect(() => {

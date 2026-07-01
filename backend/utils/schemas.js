@@ -25,7 +25,7 @@ const createStaffSchema = z.object({
     password: passwordSchema,
     fullName: z.string().min(1, 'Full name required').max(100).optional(),
     phone: z.string().max(20).optional(),
-    officeId: z.number().int().positive('Valid office ID required'),
+    officeId: z.coerce.number().int().positive('Valid office ID required'),
 });
 
 const createParcelSchema = z.object({
