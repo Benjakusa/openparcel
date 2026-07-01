@@ -30,25 +30,25 @@ export default function OfficeParcels() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
-            <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-accent shadow-sm">
+            <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-accent">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
                         <Package size={20} className="text-primary" />
                     </div>
                     <div>
-                        <h1 className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm">Office Parcels</h1>
+                        <h1 className="text-xl sm:text-2xl font-black text-primary">Office Parcels</h1>
                         <p className="text-sm font-medium text-gray-500">Manage and track your recent shipments</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                     <select value={status} onChange={e => setStatus(e.target.value)}
-                        className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent flex-1 sm:flex-none shadow-sm transition-all cursor-pointer">
+                        className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent flex-1 sm:flex-none transition-all cursor-pointer">
                         <option value="">Status: All</option>
                         {['pending_payment', 'payment_failed', 'created', 'dispatched', 'arrived', 'picked_up'].map(s => (
                             <option key={s} value={s}>{s.replace('_', ' ').toUpperCase()}</option>
                         ))}
                     </select>
-                    <button onClick={() => { setRefreshing(true); fetchParcels(); }} className="w-10 h-10 glass-card flex items-center justify-center rounded-xl text-gray-500 hover:text-accent hover:shadow-md transition-all shrink-0" title="Refresh">
+                    <button onClick={() => { setRefreshing(true); fetchParcels(); }} className="w-10 h-10 glass-card flex items-center justify-center rounded-xl text-gray-500 hover:text-accent transition-all shrink-0" title="Refresh">
                         <RefreshCw size={20} className={refreshing ? 'animate-spin' : ''} />
                     </button>
                 </div>
@@ -58,7 +58,7 @@ export default function OfficeParcels() {
                 {loading ? <div className="glass-card p-12 text-center text-gray-400 font-bold uppercase tracking-widest text-sm">Loading Parcels...</div>
                     : parcels.length === 0 ? <div className="glass-card p-12 text-center text-gray-400 font-bold uppercase tracking-widest text-sm">No parcels found</div>
                         : parcels.map(p => (
-                            <Link to={`/parcel/${p.id}`} key={p.id} className="glass-card p-4 sm:p-5 hover:-translate-y-0.5 hover:shadow-md transition-all flex flex-col sm:flex-row gap-3 sm:gap-6 justify-between items-start sm:items-center group">
+                            <Link to={`/parcel/${p.id}`} key={p.id} className="glass-card p-4 sm:p-5 hover:-translate-y-0.5 transition-all flex flex-col sm:flex-row gap-3 sm:gap-6 justify-between items-start sm:items-center group">
                                 <div className="space-y-1 w-full sm:w-auto">
                                     <div className="flex items-center justify-between sm:justify-start gap-3">
                                         <span className="font-mono font-black text-primary text-base sm:text-lg group-hover:text-accent transition-colors">{p.tracking_id || 'PENDING'}</span>

@@ -31,15 +31,7 @@ export default function AdminLayout() {
           Tablet   (md 768px+) : w-16 icon-only strip with tooltip
           Mobile   (<md)       : off-canvas slide-out via mobileMenuOpen state
       ──────────────────────────────────────────────────────────────────── */}
-      <aside className={`
-        fixed inset-y-0 left-0 flex flex-col z-50
-        bg-white border-r border-gray-200 shadow-lg
-        transition-transform duration-300
-        w-64
-        md:relative md:translate-x-0 md:w-16 md:shadow-none md:border-r md:border-gray-200
-        lg:w-64
-        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+      <aside className={` fixed inset-y-0 left-0 flex flex-col z-50 bg-white border-r border-gray-200 transition-transform duration-300 w-64 md:relative md:translate-x-0 md:w-16 md:shadow-none md:border-r md:border-gray-200 lg:w-64 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} `}>
         {/* Branding */}
         <div className="p-4 border-b border-gray-100 flex items-center justify-between shrink-0">
           {/* Full wordmark: visible on mobile off-canvas + lg desktop */}

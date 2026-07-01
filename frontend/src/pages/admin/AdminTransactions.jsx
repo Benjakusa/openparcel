@@ -32,35 +32,35 @@ export default function AdminTransactions() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary shadow-sm">
+      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center"><ArrowLeftRight size={24} className="text-indigo-600" /></div>
           <div>
-            <h1 className="text-2xl font-black text-primary drop-shadow-sm">Transactions</h1>
+            <h1 className="text-2xl font-black text-primary">Transactions</h1>
             <p className="text-sm font-medium text-gray-500">All M-Pesa payment events across the platform</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <select value={typeFilter} onChange={e => { setTypeFilter(e.target.value); setPage(1); }}
-            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm">
+            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">All types</option>
             <option value="subscription">Subscription</option>
             <option value="parcel">Parcel fee</option>
           </select>
           <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm">
+            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">All status</option>
             <option value="success">Success</option>
             <option value="failed">Failed</option>
             <option value="pending">Pending</option>
           </select>
-          <button onClick={fetchTxs} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary hover:shadow-md transition-all">
+          <button onClick={fetchTxs} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all">
             <RefreshCw size={18} />
           </button>
         </div>
       </div>
 
-      <div className="glass-card p-0 shadow-sm overflow-hidden">
+      <div className="glass-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50/50 border-b border-gray-200/50">

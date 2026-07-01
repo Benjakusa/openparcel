@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
     if (done) {
         return (
             <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
-                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn shadow-2xl">
+                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn">
                     <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
                     <h2 className="text-2xl font-black text-primary mb-3">Password Reset!</h2>
                     <p className="text-gray-500 mb-6 font-medium">You can now log in with your new password.</p>
@@ -43,7 +43,7 @@ export default function ResetPasswordPage() {
     if (!token) {
         return (
             <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
-                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn shadow-2xl">
+                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn">
                     <h2 className="text-xl font-black text-primary mb-3">Invalid Link</h2>
                     <p className="text-gray-500 mb-6">This reset link is missing or invalid.</p>
                     <Link to="/forgot-password" className="text-accent font-bold hover:underline">Request a new link</Link>
@@ -56,11 +56,11 @@ export default function ResetPasswordPage() {
         <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fadeIn mt-8 mb-12">
                 <div className="text-center mb-8">
-                    <span className="font-black text-4xl tracking-tight text-slate-900 drop-shadow-sm">
+                    <span className="font-black text-4xl tracking-tight text-slate-900">
                         OpenDesk<span className="text-blue-700">Parcel</span>
                     </span>
                 </div>
-                <div className="glass-card p-8 shadow-2xl">
+                <div className="glass-card p-8">
                     <h2 className="text-xl font-black text-primary mb-2">Set New Password</h2>
                     <p className="text-sm text-gray-500 mb-6">Enter your new password below.</p>
                     <form onSubmit={handleSubmit} className="space-y-4">

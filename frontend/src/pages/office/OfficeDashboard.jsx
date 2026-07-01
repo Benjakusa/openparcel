@@ -35,7 +35,7 @@ export default function OfficeDashboard() {
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
             {/* Office header */}
-            <div className="glass-card bg-accent-gradient p-6 sm:p-8 shadow-sm text-white overflow-hidden">
+            <div className="glass-card bg-accent-gradient p-6 sm:p-8 text-white overflow-hidden">
                 <div className="relative z-10">
                     <div className="text-xs text-blue-100 font-bold uppercase tracking-widest mb-1 opacity-80">Your Office</div>
                     <div className="text-xl sm:text-2xl font-black mb-1">{profile?.name || 'Loading...'}</div>
@@ -61,26 +61,26 @@ export default function OfficeDashboard() {
 
             {/* Quick actions grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Link to="/office/create-parcel" className="glass-card bg-white/50 border-white/60 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl transition-all group">
-                    <div className="bg-primary/5 p-3 rounded-2xl group-hover:scale-110 group-hover:bg-primary/10 transition-all shadow-inner">
+                <Link to="/office/create-parcel" className="glass-card bg-white/50 border-white/60 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 transition-all group">
+                    <div className="bg-primary/5 p-3 rounded-2xl group-hover:scale-110 group-hover:bg-primary/10 transition-all">
                         <Plus size={24} className="text-primary" />
                     </div>
                     <span className="font-bold text-xs text-primary text-center">New Parcel</span>
                 </Link>
-                <Link to="/scan?mode=dispatch" className="glass-card bg-amber-50 border-amber-100 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl transition-all group">
-                    <div className="bg-amber-100 p-3 rounded-2xl group-hover:scale-110 transition-all shadow-inner">
+                <Link to="/scan?mode=dispatch" className="glass-card bg-amber-50 border-amber-100 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 transition-all group">
+                    <div className="bg-amber-100 p-3 rounded-2xl group-hover:scale-110 transition-all">
                         <ScanLine size={24} className="text-amber-600" />
                     </div>
                     <span className="font-bold text-xs text-amber-800 text-center">Scan to Dispatch</span>
                 </Link>
-                <Link to="/scan?mode=receive" className="glass-card bg-sky-50 border-sky-100 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl transition-all group">
-                    <div className="bg-sky-100 p-3 rounded-2xl group-hover:scale-110 transition-all shadow-inner">
+                <Link to="/scan?mode=receive" className="glass-card bg-sky-50 border-sky-100 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 transition-all group">
+                    <div className="bg-sky-100 p-3 rounded-2xl group-hover:scale-110 transition-all">
                         <ScanLine size={24} className="text-sky-600" />
                     </div>
                     <span className="font-bold text-xs text-sky-800 text-center">Scan to Receive</span>
                 </Link>
-                <Link to="/scan?mode=collect" className="glass-card bg-purple-50 border-purple-100 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl transition-all group">
-                    <div className="bg-purple-100 p-3 rounded-2xl group-hover:scale-110 transition-all shadow-inner">
+                <Link to="/scan?mode=collect" className="glass-card bg-purple-50 border-purple-100 p-5 flex flex-col items-center gap-3 hover:-translate-y-1 transition-all group">
+                    <div className="bg-purple-100 p-3 rounded-2xl group-hover:scale-110 transition-all">
                         <Package size={24} className="text-purple-600" />
                     </div>
                     <span className="font-bold text-xs text-purple-800 text-center">Parcel Collection</span>
@@ -89,7 +89,7 @@ export default function OfficeDashboard() {
 
             {/* Pending dispatch */}
             {pending.length > 0 && (
-                <div className="glass-card border-l-4 border-amber-400 p-6 shadow-sm">
+                <div className="glass-card border-l-4 border-amber-400 p-6">
                     <h2 className="font-black text-primary mb-5 flex items-center gap-2 text-lg">
                         <Clock size={20} className="text-amber-500" /> Ready to Dispatch ({pending.length})
                     </h2>
@@ -113,7 +113,7 @@ export default function OfficeDashboard() {
 
             {/* Arriving parcels */}
             {arriving.length > 0 && (
-                <div className="glass-card border-l-4 border-sky-400 p-6 shadow-sm">
+                <div className="glass-card border-l-4 border-sky-400 p-6">
                     <h2 className="font-black text-primary mb-5 flex items-center gap-2 text-lg">
                         <CheckCircle2 size={20} className="text-sky-500" /> Incoming Parcels ({arriving.length})
                     </h2>
@@ -136,7 +136,7 @@ export default function OfficeDashboard() {
             )}
 
             {/* Recent parcels */}
-            <div className="glass-card p-0 shadow-sm overflow-hidden">
+            <div className="glass-card p-0 overflow-hidden">
                 <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
                     <h2 className="text-lg font-black text-primary flex items-center gap-2"><Package size={20} className="text-accent" /> Recent Parcels</h2>
                     <Link to="/office/parcels" className="text-accent text-sm font-bold hover:underline">View all</Link>

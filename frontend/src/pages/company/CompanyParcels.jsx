@@ -30,34 +30,34 @@ export default function CompanyParcels() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-            <div className="glass-card p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 border-l-4 border-accent shadow-sm">
+            <div className="glass-card p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 border-l-4 border-accent">
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
                         <Package size={24} className="text-primary" />
                     </div>
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-black text-primary drop-shadow-sm">All Parcels</h1>
+                        <h1 className="text-2xl sm:text-3xl font-black text-primary">All Parcels</h1>
                         <p className="text-sm font-medium text-gray-500">Track and manage packages across your network</p>
                     </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
                     <select value={filters.status} onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-                        className="bg-white/70 border border-white/60 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent flex-1 w-full lg:w-auto shadow-sm transition-all hover:bg-white cursor-pointer">
+                        className="bg-white/70 border border-white/60 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent flex-1 w-full lg:w-auto transition-all hover:bg-white cursor-pointer">
                         <option value="">Status: All</option>
                         {['pending_payment', 'payment_failed', 'created', 'dispatched', 'arrived', 'picked_up'].map(s => (
                             <option key={s} value={s}>{s.replace('_', ' ').toUpperCase()}</option>
                         ))}
                     </select>
                     <select value={filters.office_id} onChange={e => setFilters(f => ({ ...f, office_id: e.target.value }))}
-                        className="bg-white/70 border border-white/60 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent flex-1 w-full lg:w-auto shadow-sm transition-all hover:bg-white cursor-pointer">
+                        className="bg-white/70 border border-white/60 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent flex-1 w-full lg:w-auto transition-all hover:bg-white cursor-pointer">
                         <option value="">Office: All</option>
                         {offices.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
                     </select>
                 </div>
             </div>
 
-            <div className="glass-card p-0 shadow-sm overflow-hidden">
+            <div className="glass-card p-0 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead className="bg-gray-50/50 border-b border-gray-200/50">
@@ -80,7 +80,7 @@ export default function CompanyParcels() {
                                             <td className="px-6 py-4"><StatusBadge status={p.status} /></td>
                                             <td className="px-6 py-4 text-gray-400 text-xs font-medium">{p.created_at ? new Date(p.created_at).toLocaleDateString() : '—'}</td>
                                             <td className="px-6 py-4">
-                                                <Link to={`/parcel/${p.id}`} className="text-accent text-xs font-bold hover:underline bg-white/50 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm hover:shadow hover:bg-white transition-all">View</Link>
+                                                <Link to={`/parcel/${p.id}`} className="text-accent text-xs font-bold hover:underline bg-white/50 px-3 py-1.5 rounded-lg border border-white/50 hover:bg-white transition-all">View</Link>
                                             </td>
                                         </tr>
                                     ))}

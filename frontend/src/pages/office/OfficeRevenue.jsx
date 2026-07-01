@@ -54,7 +54,7 @@ export default function OfficeRevenue() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-pale shadow-sm">
+            <div className="bg-white rounded-2xl border border-pale">
                 <div className="px-4 py-3 border-b border-pale/50">
                     <h2 className="font-bold text-primary text-sm">Revenue by Day</h2>
                 </div>

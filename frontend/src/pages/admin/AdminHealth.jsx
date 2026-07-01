@@ -10,7 +10,7 @@ function HealthCard({ icon: Icon, label, value, status }) {
     info: 'bg-blue-500',
   };
   return (
-    <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+    <div className="glass-card bg-white/60 p-5 border border-white/60">
       <div className="flex items-center gap-3 mb-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorMap[status] || 'bg-gray-400'}`}>
           <Icon size={20} className="text-white" />
@@ -38,15 +38,15 @@ export default function AdminHealth() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card p-6 flex items-center justify-between border-l-4 border-primary shadow-sm">
+      <div className="glass-card p-6 flex items-center justify-between border-l-4 border-primary">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center"><HeartPulse size={24} className="text-emerald-600" /></div>
           <div>
-            <h1 className="text-2xl font-black text-primary drop-shadow-sm">System Health</h1>
+            <h1 className="text-2xl font-black text-primary">System Health</h1>
             <p className="text-sm font-medium text-gray-500">Platform infrastructure and operational status</p>
           </div>
         </div>
-        <button onClick={fetchHealth} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary hover:shadow-md transition-all">
+        <button onClick={fetchHealth} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all">
           <RefreshCw size={18} />
         </button>
       </div>
@@ -64,7 +64,7 @@ export default function AdminHealth() {
       ) : (
         <>
           {/* Status Banner */}
-          <div className={`glass-card p-5 ${health.db_status === 'connected' ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'} border shadow-sm flex items-center gap-3`}>
+          <div className={`glass-card p-5 ${health.db_status === 'connected' ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'} border flex items-center gap-3`}>
             {health.db_status === 'connected'
               ? <><CheckCircle size={20} className="text-emerald-600" /><span className="font-bold text-emerald-700">All systems operational</span></>
               : <><XCircle size={20} className="text-red-600" /><span className="font-bold text-red-700">System issues detected</span></>}
@@ -81,7 +81,7 @@ export default function AdminHealth() {
           </div>
 
           {/* Uptime */}
-          <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+          <div className="glass-card bg-white/60 p-5 border border-white/60">
             <h3 className="font-black text-primary text-sm uppercase tracking-wide mb-2 flex items-center gap-2"><Clock size={16} /> Server Uptime</h3>
             <div className="text-lg font-bold text-primary">
               {health.uptime ? `${Math.floor(health.uptime / 86400)}d ${Math.floor((health.uptime % 86400) / 3600)}h ${Math.floor((health.uptime % 3600) / 60)}m` : '—'}

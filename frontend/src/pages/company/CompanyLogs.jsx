@@ -102,7 +102,7 @@ export default function CompanyLogs() {
 
                     <button
                         onClick={() => { setRefreshing(true); fetchLogs(); }}
-                        className="w-10 h-10 shrink-0 glass-card flex items-center justify-center rounded-xl text-gray-500 hover:text-accent hover:shadow-md transition-all"
+                        className="w-10 h-10 shrink-0 glass-card flex items-center justify-center rounded-xl text-gray-500 hover:text-accent transition-all"
                         title="Refresh"
                     >
                         <RefreshCw size={16} className={refreshing ? 'animate-spin text-accent' : ''} />

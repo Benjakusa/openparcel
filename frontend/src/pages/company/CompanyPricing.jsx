@@ -71,7 +71,7 @@ export default function CompanyPricing() {
                     <p className="text-sm font-medium text-gray-500 mt-0.5">Set pricing per destination, type, and option</p>
                 </div>
                 <button onClick={() => setShowModal(true)}
-                    className="bg-accent text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-secondary transition-all flex items-center gap-2 shadow-sm">
+                    className="bg-accent text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-secondary transition-all flex items-center gap-2">
                     <Plus size={16} /> Add Pricing
                 </button>
             </div>
@@ -137,7 +137,7 @@ export default function CompanyPricing() {
 
             {showModal && (
                 <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-fadeIn">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-6 animate-fadeIn">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg font-black text-gray-900">Add Pricing Rule</h2>
                             <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100">
@@ -195,7 +195,7 @@ export default function CompanyPricing() {
                                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent font-mono font-bold"
                                     placeholder="0" />
                             </div>
-                            <button type="submit" className="w-full bg-accent text-white py-3 rounded-xl font-bold hover:bg-secondary transition-all shadow-sm">
+                            <button type="submit" className="w-full bg-accent text-white py-3 rounded-xl font-bold hover:bg-secondary transition-all">
                                 Save Pricing
                             </button>
                         </form>

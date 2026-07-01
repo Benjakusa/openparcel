@@ -4,11 +4,11 @@ import { Building2, Clock, CheckCircle2, Package, DollarSign, Users, BarChart3, 
 
 function StatCard({ icon: Icon, label, value, color }) {
   return (
-    <div className="glass-card p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all group">
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 shadow-inner ${color}`}>
-        <Icon size={22} className="text-white drop-shadow-sm" />
+    <div className="glass-card p-5 hover:-translate-y-1 transition-all group">
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110 ${color}`}>
+        <Icon size={22} className="text-white" />
       </div>
-      <div className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm">{value?.toLocaleString() ?? '—'}</div>
+      <div className="text-xl sm:text-2xl font-black text-primary">{value?.toLocaleString() ?? '—'}</div>
       <div className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{label}</div>
     </div>
   );
@@ -23,7 +23,7 @@ function BarChart({ data, valueKey, color, height = 120 }) {
         const h = (Number(d[valueKey]) / max) * 100;
         return (
           <div key={i} className="flex-1 flex flex-col items-center group relative">
-            <div className="absolute bottom-full mb-1 text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity bg-white px-2 py-0.5 rounded shadow-sm whitespace-nowrap">
+            <div className="absolute bottom-full mb-1 text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity bg-white px-2 py-0.5 rounded whitespace-nowrap">
               {Number(d[valueKey]).toLocaleString()}
             </div>
             <div className="w-full rounded-t-sm transition-all hover:opacity-80" style={{ height: `${h}%`, backgroundColor: color, minHeight: d[valueKey] > 0 ? 4 : 0 }} />
@@ -90,7 +90,7 @@ export default function AdminStats() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card bg-accent-gradient p-6 sm:p-8 text-white mb-2 overflow-hidden shadow-sm">
+      <div className="glass-card bg-accent-gradient p-6 sm:p-8 text-white mb-2 overflow-hidden">
         <h1 className="text-xl sm:text-2xl font-black">Platform Analytics</h1>
         <p className="text-blue-100 font-medium mt-1 text-sm">Revenue, parcel volume, and client growth trends.</p>
       </div>
@@ -130,7 +130,7 @@ export default function AdminStats() {
                 const h = (Number(d.platform_revenue) / max) * 100;
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center group relative">
-                    <div className="absolute bottom-full mb-1 text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity bg-white px-2 py-0.5 rounded shadow-sm whitespace-nowrap">
+                    <div className="absolute bottom-full mb-1 text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity bg-white px-2 py-0.5 rounded whitespace-nowrap">
                       KES {Number(d.platform_revenue).toLocaleString()}
                     </div>
                     <div className="w-full rounded-t-sm transition-all" style={{ height: `${Math.max(h, 2)}%`, backgroundColor: '#34d399' }} />

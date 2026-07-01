@@ -24,9 +24,9 @@ function ResetPasswordForm({ email, onSave, onCancel }) {
 
   return (
     <div className="fixed inset-0 bg-primary/20 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <div className="glass-card bg-white/90 p-8 w-full max-w-md shadow-2xl transition-all relative overflow-hidden">
+      <div className="glass-card bg-white/90 p-8 w-full max-w-md transition-all relative overflow-hidden">
         <div className="flex items-center justify-between mb-6 relative z-10">
-          <h3 className="font-black text-2xl text-primary drop-shadow-sm flex items-center gap-2">
+          <h3 className="font-black text-2xl text-primary flex items-center gap-2">
             <Key className="text-amber-500" />
             Reset Password
           </h3>
@@ -39,7 +39,7 @@ function ResetPasswordForm({ email, onSave, onCancel }) {
           <div>
             <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1.5">New Password</label>
             <input type="password" required placeholder="New secure password" value={password} onChange={e => setPassword(e.target.value)}
-              className="w-full bg-white/70 border border-gray-200/60 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all shadow-inner" />
+              className="w-full bg-white/70 border border-gray-200/60 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all" />
             <PasswordStrength password={password} />
           </div>
 
@@ -61,8 +61,8 @@ function ResetPasswordForm({ email, onSave, onCancel }) {
           </div>
 
           <div className="flex gap-4 pt-4">
-            <button type="button" onClick={onCancel} className="flex-1 bg-white/60 hover:bg-white border border-white shadow-sm text-gray-600 py-3.5 rounded-xl text-base font-bold transition-all">Cancel</button>
-            <button type="submit" disabled={saving} className="flex-1 bg-amber-500 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 hover:bg-amber-600 py-3.5 rounded-xl text-base font-black disabled:opacity-60 transition-all">
+            <button type="button" onClick={onCancel} className="flex-1 bg-white/60 hover:bg-white border border-white text-gray-600 py-3.5 rounded-xl text-base font-bold transition-all">Cancel</button>
+            <button type="submit" disabled={saving} className="flex-1 bg-amber-500 text-white hover:-translate-y-0.5 hover:bg-amber-600 py-3.5 rounded-xl text-base font-black disabled:opacity-60 transition-all">
               {saving ? 'Saving...' : 'Reset Key'}
             </button>
           </div>
@@ -81,7 +81,7 @@ const STATUS_MAP = {
 
 function StatCard({ icon: Icon, label, value, color, sub }) {
   return (
-    <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+    <div className="glass-card bg-white/60 p-5 border border-white/60">
       <div className="flex items-center gap-3 mb-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
           <Icon size={20} className="text-white" />
@@ -162,10 +162,10 @@ export default function AdminCompanyDetail() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="glass-card p-6 border-l-4 border-primary shadow-sm">
+      <div className="glass-card p-6 border-l-4 border-primary">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <button onClick={() => navigate('/admin/companies')} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary hover:shadow-md transition-all">
+            <button onClick={() => navigate('/admin/companies')} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all">
               <ArrowLeft size={20} />
             </button>
             <div>
@@ -180,23 +180,23 @@ export default function AdminCompanyDetail() {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            {!company.approved && <button onClick={approve} className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm">Approve Client</button>}
-            {company.approved && company.subscription_status !== 'suspended' && <button onClick={suspend} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm">Suspend</button>}
+            {!company.approved && <button onClick={approve} className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all">Approve Client</button>}
+            {company.approved && company.subscription_status !== 'suspended' && <button onClick={suspend} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all">Suspend</button>}
             <div className="relative group">
-              <button disabled={extending} className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+              <button disabled={extending} className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
                 <Clock size={14} /> {extending ? 'Extending...' : 'Extend Trial'}
               </button>
-              <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[140px]">
+              <div className="absolute right-0 top-full mt-1 bg-white rounded-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[140px]">
                 {[7, 14, 30].map(d => (
                   <button key={d} onClick={() => extendTrial(d)} className="block w-full text-left px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg">{d} days</button>
                 ))}
               </div>
             </div>
             <div className="relative group">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
                 <CreditCard size={14} /> Change Plan
               </button>
-              <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[140px]">
+              <div className="absolute right-0 top-full mt-1 bg-white rounded-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[140px]">
                 {['monthly', 'yearly', 'trialing'].map(p => (
                   <button key={p} onClick={() => changePlan(p)} className="block w-full text-left px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg capitalize">{p}</button>
                 ))}
@@ -207,7 +207,7 @@ export default function AdminCompanyDetail() {
       </div>
 
       {/* Setup Checklist */}
-      <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+      <div className="glass-card bg-white/60 p-5 border border-white/60">
         <h2 className="font-black text-primary text-sm uppercase tracking-wide mb-3 flex items-center gap-2"><Activity size={16} /> Setup Progress</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">{setupItems.map((item, i) => <CheckItem key={i} {...item} />)}</div>
       </div>
@@ -224,7 +224,7 @@ export default function AdminCompanyDetail() {
       {/* Users + Offices row */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Users */}
-        <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+        <div className="glass-card bg-white/60 p-5 border border-white/60">
           <h2 className="font-black text-primary text-sm uppercase tracking-wide mb-4 flex items-center gap-2"><Users size={16} /> Staff ({company.users?.length || 0})</h2>
           {company.users?.length === 0 ? <p className="text-gray-400 text-sm">No staff added yet</p> : (
             <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -236,7 +236,7 @@ export default function AdminCompanyDetail() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-400">{u.phone || '—'}</span>
-                    <button onClick={() => setResetConfig(u)} className="bg-white hover:bg-amber-50 border border-gray-200 hover:border-amber-200 text-amber-500 hover:text-amber-600 px-2 h-6 rounded-md flex items-center justify-center transition-all shadow-sm font-bold text-[10px]" title="Reset Password">
+                    <button onClick={() => setResetConfig(u)} className="bg-white hover:bg-amber-50 border border-gray-200 hover:border-amber-200 text-amber-500 hover:text-amber-600 px-2 h-6 rounded-md flex items-center justify-center transition-all font-bold text-[10px]" title="Reset Password">
                       Reset
                     </button>
                   </div>
@@ -247,7 +247,7 @@ export default function AdminCompanyDetail() {
         </div>
 
         {/* Offices */}
-        <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+        <div className="glass-card bg-white/60 p-5 border border-white/60">
           <h2 className="font-black text-primary text-sm uppercase tracking-wide mb-4 flex items-center gap-2"><MapPin size={16} /> Offices ({company.offices?.length || 0})</h2>
           {company.offices?.length === 0 ? <p className="text-gray-400 text-sm">No offices created yet</p> : (
             <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -266,7 +266,7 @@ export default function AdminCompanyDetail() {
       </div>
 
       {/* Recent Parcels */}
-      <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+      <div className="glass-card bg-white/60 p-5 border border-white/60">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-black text-primary text-sm uppercase tracking-wide flex items-center gap-2"><Package size={16} /> Recent Parcels</h2>
           {company.recent_parcels?.length > 0 && (
@@ -291,8 +291,7 @@ export default function AdminCompanyDetail() {
               ) : company.recent_parcels?.filter(p => !parcelFilter || p.status === parcelFilter).map(p => (
                 <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50/50">
                   <td className="py-2 font-mono font-bold text-primary text-xs">{p.tracking_id || p.parcel_id || 'PENDING'}</td>
-                  <td className="py-2"><span className={`text-xs font-bold px-2 py-0.5 rounded-full ${p.status === 'created' ? 'bg-blue-100 text-blue-700' : p.status === 'dispatched' ? 'bg-amber-100 text-amber-700' : p.status === 'arrived' ? 'bg-green-100 text-green-700' : p.status === 'picked_up' ? 'bg-emerald-100 text-emerald-700' : p.status === 'pending_payment' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                    }`}>{p.status?.replace('_', ' ')}</span></td>
+                  <td className="py-2"><span className={`text-xs font-bold px-2 py-0.5 rounded-full ${p.status === 'created' ? 'bg-blue-100 text-blue-700' : p.status === 'dispatched' ? 'bg-amber-100 text-amber-700' : p.status === 'arrived' ? 'bg-green-100 text-green-700' : p.status === 'picked_up' ? 'bg-emerald-100 text-emerald-700' : p.status === 'pending_payment' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700' }`}>{p.status?.replace('_', ' ')}</span></td>
                   <td className="py-2 font-semibold">KES {p.fee_paid || 0}</td>
                   <td className="py-2 text-gray-500 text-xs">{p.payment_method || '—'}</td>
                   <td className="py-2 text-gray-500 text-xs">{new Date(p.created_at).toLocaleDateString()}</td>
@@ -304,7 +303,7 @@ export default function AdminCompanyDetail() {
       </div>
 
       {/* Activity */}
-      <div className="glass-card bg-white/60 p-5 border border-white/60 shadow-sm">
+      <div className="glass-card bg-white/60 p-5 border border-white/60">
         <h2 className="font-black text-primary text-sm uppercase tracking-wide mb-4 flex items-center gap-2"><Activity size={16} /> Recent Activity</h2>
         {company.recent_activity?.length === 0 ? <p className="text-gray-400 text-sm">No activity yet</p> : (
           <div className="space-y-2 max-h-64 overflow-y-auto">

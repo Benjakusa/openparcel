@@ -78,13 +78,13 @@ export default function AdminCompanies() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary shadow-sm mb-6">
+      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary mb-6">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
             <Building2 size={24} className="text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-primary drop-shadow-sm">Client Companies</h1>
+            <h1 className="text-2xl sm:text-3xl font-black text-primary">Client Companies</h1>
             <p className="text-sm font-medium text-gray-500">{companies.length} registered tenants</p>
           </div>
         </div>
@@ -93,24 +93,24 @@ export default function AdminCompanies() {
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search..."
-              className="w-full pl-9 pr-3 py-2 bg-white/70 border border-white/60 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm transition-all focus:bg-white placeholder-gray-400"
+              className="w-full pl-9 pr-3 py-2 bg-white/70 border border-white/60 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all focus:bg-white placeholder-gray-400"
             />
           </div>
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm">
+            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">All status</option>
             <option value="trialing">Trialing</option>
             <option value="active">Active</option>
             <option value="expired">Expired</option>
             <option value="suspended">Suspended</option>
           </select>
-          <button onClick={fetchCompanies} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary hover:shadow-md transition-all shrink-0" title="Refresh">
+          <button onClick={fetchCompanies} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all shrink-0" title="Refresh">
             <RefreshCw size={18} />
           </button>
         </div>
       </div>
 
-      <div className="glass-card p-0 shadow-sm overflow-hidden">
+      <div className="glass-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50/50 border-b border-gray-200/50">
@@ -168,7 +168,7 @@ export default function AdminCompanies() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => navigate(`/admin/companies/${c.id}`)}
-                        className="bg-white/50 border border-white/50 shadow-sm hover:shadow hover:bg-white transition-all px-2.5 py-1.5 rounded-lg text-accent hover:text-primary text-xs font-bold">
+                        className="bg-white/50 border border-white/50 hover:bg-white transition-all px-2.5 py-1.5 rounded-lg text-accent hover:text-primary text-xs font-bold">
                         View
                       </button>
                       {!c.approved &&

@@ -27,15 +27,15 @@ export default function RegisterPage() {
     if (done) {
         return (
             <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
-                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn shadow-2xl">
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn">
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle className="text-green-600" size={40} />
                     </div>
                     <h2 className="text-2xl font-black text-primary mb-3">Registration Complete!</h2>
                     <p className="text-gray-500 mb-6 font-medium">
                         Your company has been successfully registered. You can now securely log into your admin dashboard.
                     </p>
-                    <Link to="/login" className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-secondary hover:shadow-lg transition-all shadow-md">
+                    <Link to="/login" className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-secondary transition-all">
                         Log In Now
                     </Link>
                 </div>
@@ -48,13 +48,13 @@ export default function RegisterPage() {
             <div className="w-full max-w-md animate-fadeIn mt-8 mb-12">
                 <div className="text-center mb-8">
                     <div className="mb-6">
-                        <span className="font-black text-4xl tracking-tight text-slate-900 drop-shadow-sm">
+                        <span className="font-black text-4xl tracking-tight text-slate-900">
                             OpenDesk<span className="text-blue-700">Parcel</span>
                         </span>
                     </div>
                 </div>
 
-                <div className="glass-card p-8 shadow-2xl">
+                <div className="glass-card p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
                             <label className="block text-sm font-semibold text-primary mb-1.5">Company Name</label>
@@ -62,7 +62,7 @@ export default function RegisterPage() {
                                 required
                                 value={form.companyName}
                                 onChange={e => setForm(f => ({ ...f, companyName: e.target.value }))}
-                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                                 placeholder="Acme Logistics Ltd"
                             />
                         </div>
@@ -72,7 +72,7 @@ export default function RegisterPage() {
                                 type="tel"
                                 value={form.companyPhone}
                                 onChange={e => setForm(f => ({ ...f, companyPhone: e.target.value }))}
-                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                                 placeholder="+254 7XX XXX XXX"
                             />
                         </div>
@@ -83,7 +83,7 @@ export default function RegisterPage() {
                                 required
                                 value={form.adminEmail}
                                 onChange={e => setForm(f => ({ ...f, adminEmail: e.target.value }))}
-                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                                 placeholder="admin@yourcompany.com"
                             />
                         </div>
@@ -94,7 +94,7 @@ export default function RegisterPage() {
                                 required
                                 value={form.adminPassword}
                                 onChange={e => setForm(f => ({ ...f, adminPassword: e.target.value }))}
-                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                                 placeholder="At least 8 characters"
                             />
                             <PasswordStrength password={form.adminPassword} />
@@ -102,7 +102,7 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary hover:shadow-lg transition-all disabled:opacity-60 mt-2"
+                            className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary transition-all disabled:opacity-60 mt-2"
                         >
                             {loading ? 'Registering...' : 'Register Company'}
                         </button>

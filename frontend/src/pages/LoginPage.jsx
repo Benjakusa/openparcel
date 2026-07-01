@@ -34,14 +34,14 @@ export default function LoginPage() {
             <div className="w-full max-w-md animate-fadeIn">
                 <div className="text-center mb-8">
                     <div className="mb-6">
-                        <span className="font-black text-4xl tracking-tight text-slate-900 drop-shadow-sm">
+                        <span className="font-black text-4xl tracking-tight text-slate-900">
                             OpenDesk<span className="text-blue-700">Parcel</span>
                         </span>
                     </div>
                     <p className="text-gray-500 mt-2 font-medium">Sign in to your account</p>
                 </div>
 
-                <div className="glass-card p-8 shadow-2xl">
+                <div className="glass-card p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
                             <label className="block text-sm font-semibold text-primary mb-1.5">Email Address</label>
@@ -50,7 +50,7 @@ export default function LoginPage() {
                                 required
                                 value={form.email}
                                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                                 placeholder="you@company.com"
                             />
                         </div>
@@ -61,14 +61,14 @@ export default function LoginPage() {
                                 required
                                 value={form.password}
                                 onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner"
+                                className="w-full border border-gray-200 bg-white/70 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                                 placeholder="••••••••"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary hover:shadow-lg transition-all disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
+                            className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary transition-all disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
                         >
                             {loading ? <span className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" /> : <LogIn size={18} />}
                             {loading ? 'Signing in...' : 'Sign In'}

@@ -30,7 +30,7 @@ export default function PrintPage() {
 
     return (
         <div className="h-screen w-screen relative">
-            <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-gray-800 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-2xl hover:bg-gray-700 z-50 flex items-center gap-2">
+            <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-gray-800 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-gray-700 z-50 flex items-center gap-2">
                 <ArrowLeft size={16} /> Back
             </button>
             <iframe

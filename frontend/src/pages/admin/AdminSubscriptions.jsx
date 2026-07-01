@@ -55,30 +55,30 @@ export default function AdminSubscriptions() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary shadow-sm">
+      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center"><CreditCard size={24} className="text-amber-600" /></div>
           <div>
-            <h1 className="text-2xl font-black text-primary drop-shadow-sm">Subscriptions</h1>
+            <h1 className="text-2xl font-black text-primary">Subscriptions</h1>
             <p className="text-sm font-medium text-gray-500">{subs.length} clients · Manage billing and trials</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <select value={filter} onChange={e => setFilter(e.target.value)}
-            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm">
+            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">All</option>
             <option value="active">Active</option>
             <option value="trialing">Trialing</option>
             <option value="expired">Expired</option>
             <option value="suspended">Suspended</option>
           </select>
-          <button onClick={fetchSubs} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary hover:shadow-md transition-all">
+          <button onClick={fetchSubs} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all">
             <RefreshCw size={18} />
           </button>
         </div>
       </div>
 
-      <div className="glass-card p-0 shadow-sm overflow-hidden">
+      <div className="glass-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50/50 border-b border-gray-200/50">
@@ -113,7 +113,7 @@ export default function AdminSubscriptions() {
                         <button className="bg-amber-50 hover:bg-amber-100 border border-amber-100 px-2 py-1 rounded-lg text-amber-700 text-xs font-bold transition-all">
                           <Clock size={12} className="inline mr-1" />Trial
                         </button>
-                        <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[120px]">
+                        <div className="absolute right-0 top-full mt-1 bg-white rounded-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[120px]">
                           {[7, 14, 30].map(d => (
                             <button key={d} onClick={() => extendTrial(s.id, s.name, d)} className="block w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 rounded-lg">{d} days</button>
                           ))}
@@ -123,7 +123,7 @@ export default function AdminSubscriptions() {
                         <button className="bg-blue-50 hover:bg-blue-100 border border-blue-100 px-2 py-1 rounded-lg text-blue-700 text-xs font-bold transition-all">
                           <CreditCard size={12} className="inline mr-1" />Plan
                         </button>
-                        <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[120px]">
+                        <div className="absolute right-0 top-full mt-1 bg-white rounded-xl border border-gray-100 p-1.5 hidden group-hover:block z-10 min-w-[120px]">
                           {['monthly', 'yearly', 'trialing'].map(p => (
                             <button key={p} onClick={() => changePlan(s.id, s.name, p)} className="block w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 rounded-lg capitalize">{p}</button>
                           ))}

@@ -141,9 +141,9 @@ export default function ScanPage() {
 
     return (
         <div className="min-h-screen bg-gray-50/50">
-            <div className="bg-white border-b border-gray-200 text-primary px-5 py-4 flex items-center justify-between shadow-sm sticky top-0 z-10">
+            <div className="bg-white border-b border-gray-200 text-primary px-5 py-4 flex items-center justify-between sticky top-0 z-10">
                 <div className="flex flex-row items-center gap-2">
-                    <button onClick={() => navigate(-1)} className="text-gray-600 hover:text-primary transition-colors font-bold px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 flex items-center shadow-sm mr-3 gap-2">
+                    <button onClick={() => navigate(-1)} className="text-gray-600 hover:text-primary transition-colors font-bold px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 flex items-center mr-3 gap-2">
                         <ArrowLeft size={18} /> <span className="hidden sm:block text-sm">Back</span>
                     </button>
                     <ScanLine size={24} className="text-accent" />
@@ -154,7 +154,7 @@ export default function ScanPage() {
             {/* Success/Error Result Screen */}
             {result ? (
                 <div className="p-6 max-w-md mx-auto mt-8 text-center animate-fadeIn">
-                    <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md ${result.success ? 'bg-emerald-100' : 'bg-red-100'}`}>
+                    <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 ${result.success ? 'bg-emerald-100' : 'bg-red-100'}`}>
                         {result.success ? <CheckCircle size={50} className="text-emerald-500" /> : <XCircle size={50} className="text-red-500" />}
                     </div>
                     <h2 className={`font-black text-3xl mb-3 ${result.success ? 'text-emerald-800' : 'text-red-800'}`}>
@@ -163,27 +163,27 @@ export default function ScanPage() {
                     <p className="text-gray-600 mb-6 font-medium text-lg">{result.message}</p>
 
                     {result.parcel && (
-                        <div className="bg-white rounded-2xl p-5 text-left mb-8 border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div className="bg-white rounded-2xl p-5 text-left mb-8 border border-gray-200 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-accent/10 to-transparent blur-xl rounded-bl-full pointer-events-none -mr-4 -mt-4"></div>
                             <div className="relative z-10">
                                 <div className="text-xs uppercase font-bold text-gray-500 tracking-wider mb-1">Tracking ID</div>
                                 <div className="font-mono text-lg font-black text-primary mb-4">{result.parcel.tracking_id}</div>
 
                                 <div className="text-xs uppercase font-bold text-gray-500 tracking-wider mb-1">Updated Status</div>
-                                <div><span className={`badge-${result.parcel.status} font-black px-3 py-1.5 rounded-lg text-sm shadow-sm`}>{result.parcel.status.replace('_', ' ')}</span></div>
+                                <div><span className={`badge-${result.parcel.status} font-black px-3 py-1.5 rounded-lg text-sm`}>{result.parcel.status.replace('_', ' ')}</span></div>
                             </div>
                         </div>
                     )}
-                    <button onClick={reset} className="w-full bg-primary text-white border border-gray-800 px-8 py-4 rounded-xl font-black text-lg hover:bg-secondary hover:shadow-lg transition-all active:scale-95">
+                    <button onClick={reset} className="w-full bg-primary text-white border border-gray-800 px-8 py-4 rounded-xl font-black text-lg hover:bg-secondary transition-all active:scale-95">
                         Scan Another Parcel
                     </button>
                 </div>
             ) : parcelData ? (
                 /* Looked up Parcel Data Screen with Actions */
                 <div className="p-4 sm:p-6 lg:p-8 max-w-lg mx-auto mt-4 animate-fadeIn">
-                    <div className="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden relative">
+                    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden relative">
                         <div className="bg-slate-50 border-b border-gray-200 p-6 flex flex-col justify-center items-center text-center">
-                            <div className="w-16 h-16 bg-white shadow-sm border border-gray-100 rounded-2xl flex items-center justify-center mb-4">
+                            <div className="w-16 h-16 bg-white border border-gray-100 rounded-2xl flex items-center justify-center mb-4">
                                 <Package size={32} className="text-accent" />
                             </div>
                             <h2 className="text-2xl font-black text-primary tracking-tight">{parcelData.tracking_id}</h2>
@@ -221,7 +221,7 @@ export default function ScanPage() {
                                                 className="w-full bg-white border border-amber-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 rounded-xl px-4 py-3 font-mono font-bold text-lg text-amber-900 transition-all uppercase placeholder-amber-200"
                                             />
                                         </div>
-                                        <button disabled={processingAction || !vehicleNo.trim()} onClick={() => handleAction('dispatch')} className="w-full flex items-center justify-between text-left bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl shadow-md transition-all group disabled:opacity-50">
+                                        <button disabled={processingAction || !vehicleNo.trim()} onClick={() => handleAction('dispatch')} className="w-full flex items-center justify-between text-left bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl transition-all group disabled:opacity-50">
                                             <div>
                                                 <div className="font-black text-lg">Dispatch Parcel</div>
                                                 <div className="text-xs text-blue-100 font-semibold opacity-90 mt-0.5">Send off to {parcelData.receiving_office_name}</div>
@@ -232,7 +232,7 @@ export default function ScanPage() {
                                         </button>
                                     </div>
                                 ) : parcelData.status === 'dispatched' && isReceiver && mode === 'receive' ? (
-                                    <button disabled={processingAction} onClick={() => handleAction('receive')} className="w-full flex items-center justify-between text-left bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-2xl shadow-md transition-all group disabled:opacity-50">
+                                    <button disabled={processingAction} onClick={() => handleAction('receive')} className="w-full flex items-center justify-between text-left bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-2xl transition-all group disabled:opacity-50">
                                         <div>
                                             <div className="font-black text-lg">Receive Parcel</div>
                                             <div className="text-xs text-emerald-100 font-semibold opacity-90 mt-0.5">Mark arrived at {parcelData.receiving_office_name}</div>
@@ -242,7 +242,7 @@ export default function ScanPage() {
                                         </div>
                                     </button>
                                 ) : parcelData.status === 'arrived' && isReceiver && mode === 'collect' ? (
-                                    <button disabled={processingAction} onClick={() => handleAction('collect')} className="w-full flex items-center justify-between text-left bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-2xl shadow-md transition-all group disabled:opacity-50 border-2 border-transparent hover:border-purple-300">
+                                    <button disabled={processingAction} onClick={() => handleAction('collect')} className="w-full flex items-center justify-between text-left bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-2xl transition-all group disabled:opacity-50 border-2 border-transparent hover:border-purple-300">
                                         <div>
                                             <div className="font-black text-xl">Verified & Collect</div>
                                             <div className="text-sm text-purple-100 font-semibold opacity-90 mt-0.5">I have verified Receiver's ID</div>
@@ -270,7 +270,7 @@ export default function ScanPage() {
                 /* Main Scanning View */
                 <div className="p-4 sm:p-6 lg:p-8 max-w-lg mx-auto">
                     {/* Tabs */}
-                    <div className="flex bg-white shadow-sm border border-gray-200 p-1.5 rounded-2xl mb-6">
+                    <div className="flex bg-white border border-gray-200 p-1.5 rounded-2xl mb-6">
                         {[['camera', '📷 Camera Code Scanner'], ['manual', '⌨️ Manual Entry']].map(([id, label]) => (
                             <button key={id} onClick={() => { setTab(id); if (id === 'camera') { reset(); setScanning(false); } }}
                                 className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all ${tab === id ? 'bg-primary text-white shadow-md' : 'bg-transparent text-gray-500 hover:text-primary'}`}>
@@ -279,20 +279,20 @@ export default function ScanPage() {
                         ))}
                     </div>
 
-                    <div className="glass-card bg-white border border-gray-200 p-6 sm:p-8 shadow-xl rounded-3xl relative overflow-hidden">
+                    <div className="glass-card bg-white border border-gray-200 p-6 sm:p-8 rounded-3xl relative overflow-hidden">
                         {tab === 'camera' && (
                             <div className="flex flex-col items-center">
                                 <div className="text-center mb-6">
-                                    <h2 className="text-2xl font-black text-primary drop-shadow-sm">Scan QR Label</h2>
+                                    <h2 className="text-2xl font-black text-primary">Scan QR Label</h2>
                                     <p className="text-gray-500 font-medium text-sm mt-1">Point your camera at the OpenDesk QR label</p>
                                 </div>
-                                <div className="relative bg-slate-900 border-4 border-gray-900 rounded-3xl overflow-hidden mb-6 aspect-square w-full sm:w-80 shadow-inner group">
+                                <div className="relative bg-slate-900 border-4 border-gray-900 rounded-3xl overflow-hidden mb-6 aspect-square w-full sm:w-80 group">
                                     <video ref={videoRef} className="w-full h-full object-cover" muted playsInline />
                                     <canvas ref={canvasRef} className="hidden" />
 
                                     {!scanning && (
                                         <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10 transition-all group-hover:bg-black/50">
-                                            <button onClick={startCamera} className="bg-white text-primary px-8 py-4 rounded-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all flex flex-col items-center gap-2">
+                                            <button onClick={startCamera} className="bg-white text-primary px-8 py-4 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all flex flex-col items-center gap-2">
                                                 <ScanLine size={32} className="text-accent" /> <span className="uppercase tracking-widest text-[10px]">Tap to Start</span>
                                             </button>
                                         </div>
@@ -309,23 +309,23 @@ export default function ScanPage() {
                                         </div>
                                     )}
                                 </div>
-                                {scanning && <button onClick={stopCamera} className="bg-red-50 text-red-600 px-6 py-2 rounded-xl text-sm font-bold border border-red-200 shadow-sm hover:bg-red-100 transition-colors">Abort Scanner</button>}
+                                {scanning && <button onClick={stopCamera} className="bg-red-50 text-red-600 px-6 py-2 rounded-xl text-sm font-bold border border-red-200 hover:bg-red-100 transition-colors">Abort Scanner</button>}
                             </div>
                         )}
 
                         {tab === 'manual' && (
                             <form onSubmit={handleManualSubmit} className="space-y-6">
                                 <div className="text-center mb-8">
-                                    <h2 className="text-2xl font-black text-primary drop-shadow-sm">Manual Lookup</h2>
+                                    <h2 className="text-2xl font-black text-primary">Manual Lookup</h2>
                                     <p className="text-gray-500 font-medium text-sm mt-1">Enter the tracking ID directly</p>
                                 </div>
                                 <div>
                                     <label className="block text-xs uppercase tracking-widest font-black text-gray-400 mb-2">Tracking ID / Code</label>
                                     <input value={manualId} onChange={e => setManualId(e.target.value)}
                                         placeholder="e.g. OPEN-AB12CD34"
-                                        className="w-full border-2 border-gray-200 bg-gray-50 rounded-2xl px-5 py-4 text-base focus:outline-none focus:ring-4 focus:ring-accent/20 focus:border-accent font-mono font-bold text-primary transition-all shadow-inner" />
+                                        className="w-full border-2 border-gray-200 bg-gray-50 rounded-2xl px-5 py-4 text-base focus:outline-none focus:ring-4 focus:ring-accent/20 focus:border-accent font-mono font-bold text-primary transition-all" />
                                 </div>
-                                <button type="submit" className="w-full bg-primary text-white py-4 rounded-2xl font-black text-lg hover:bg-secondary hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-md mt-2 flex justify-center items-center gap-2">
+                                <button type="submit" className="w-full bg-primary text-white py-4 rounded-2xl font-black text-lg hover:bg-secondary hover:-translate-y-0.5 active:translate-y-0 transition-all mt-2 flex justify-center items-center gap-2">
                                     Search Database <ArrowRight size={20} />
                                 </button>
                             </form>

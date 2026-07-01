@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
     if (sent) {
         return (
             <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
-                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn shadow-2xl">
+                <div className="glass-card p-10 w-full max-w-md text-center animate-fadeIn">
                     <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
                     <h2 className="text-2xl font-black text-primary mb-3">Check Your Email</h2>
                     <p className="text-gray-500 mb-2 font-medium">
@@ -44,11 +44,11 @@ export default function ForgotPasswordPage() {
         <div className="min-h-[90vh] bg-transparent flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-fadeIn mt-8 mb-12">
                 <div className="text-center mb-8">
-                    <span className="font-black text-4xl tracking-tight text-slate-900 drop-shadow-sm">
+                    <span className="font-black text-4xl tracking-tight text-slate-900">
                         OpenDesk<span className="text-blue-700">Parcel</span>
                     </span>
                 </div>
-                <div className="glass-card p-8 shadow-2xl">
+                <div className="glass-card p-8">
                     <h2 className="text-xl font-black text-primary mb-2">Reset Password</h2>
                     <p className="text-sm text-gray-500 mb-6">Enter your email and we'll send you a reset link.</p>
                     <form onSubmit={handleSubmit} className="space-y-4">

@@ -45,15 +45,15 @@ export default function CompanyMpesa() {
                     <Settings size={24} className="text-primary" />
                 </div>
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-black text-primary drop-shadow-sm">M-Pesa Settings</h1>
+                    <h1 className="text-2xl sm:text-3xl font-black text-primary">M-Pesa Settings</h1>
                     <p className="text-sm font-medium text-gray-500">Configure your company's credentials for collecting parcel fees</p>
                 </div>
             </div>
 
             {config?.configured && (
-                <div className="bg-emerald-50/80 backdrop-blur-sm border border-emerald-200/60 rounded-2xl p-5 shadow-sm flex items-center gap-4 relative overflow-hidden">
+                <div className="bg-emerald-50/80 backdrop-blur-sm border border-emerald-200/60 rounded-2xl p-5 flex items-center gap-4 relative overflow-hidden">
                     <div className="absolute inset-0 bg-emerald-400/5 mix-blend-overlay"></div>
-                    <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-emerald-100 flex items-center justify-center relative z-10">
+                    <div className="w-12 h-12 bg-white rounded-xl border border-emerald-100 flex items-center justify-center relative z-10">
                         <Shield className="text-emerald-500" size={24} />
                     </div>
                     <div className="relative z-10">
@@ -63,7 +63,7 @@ export default function CompanyMpesa() {
                 </div>
             )}
 
-            <div className="glass-card bg-white/60 border border-white shadow-sm p-6 sm:p-8">
+            <div className="glass-card bg-white/60 border border-white p-6 sm:p-8">
                 <h2 className="font-black text-xl text-primary mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-accent"></span>{config?.configured ? 'Update Credentials' : 'Configure M-Pesa'}</h2>
                 <form onSubmit={handleSave} className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-5">
@@ -73,14 +73,14 @@ export default function CompanyMpesa() {
                                 <input type={['consumerSecret', 'passkey'].includes(key) ? 'password' : 'text'} required={req}
                                     value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                                     placeholder={config?.configured ? '(leave blank to keep)' : ''}
-                                    className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner" />
+                                    className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
                             </div>
                         ))}
                     </div>
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1.5">Environment</label>
                         <select value={form.environment} onChange={e => setForm(f => ({ ...f, environment: e.target.value }))}
-                            className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-inner">
+                            className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all">
                             <option value="sandbox">Sandbox (testing)</option>
                             <option value="production">Production</option>
                         </select>
@@ -88,22 +88,22 @@ export default function CompanyMpesa() {
                     <div className="bg-white/50 border border-white rounded-xl p-4 text-xs font-semibold text-gray-500 flex gap-2">
                         <span>🔒</span> <span>Credentials are encrypted using AES-256-CBC before storage. Never stored in plaintext.</span>
                     </div>
-                    <button type="submit" disabled={saving} className="w-full sm:w-auto bg-primary text-white px-8 py-3.5 rounded-xl font-black hover:bg-secondary disabled:opacity-60 text-base transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                    <button type="submit" disabled={saving} className="w-full sm:w-auto bg-primary text-white px-8 py-3.5 rounded-xl font-black hover:bg-secondary disabled:opacity-60 text-base transition-all hover:-translate-y-0.5">
                         {saving ? 'Saving...' : 'Save Credentials'}
                     </button>
                 </form>
             </div>
 
             {config?.configured && (
-                <div className="glass-card bg-white/60 border border-white shadow-sm p-6 sm:p-8 relative overflow-hidden">
+                <div className="glass-card bg-white/60 border border-white p-6 sm:p-8 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-emerald-500/10 to-transparent blur-xl rounded-bl-full pointer-events-none -mr-4 -mt-4"></div>
                     <h2 className="font-black text-xl text-primary mb-4 flex items-center gap-2 relative z-10"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Test M-Pesa Integration (KES 1)</h2>
                     <div className="flex flex-col sm:flex-row gap-3 relative z-10">
                         <input value={testPhone} onChange={e => setTestPhone(e.target.value)}
                             placeholder="Testing Phone e.g. 0708374149"
-                            className="flex-1 border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all shadow-inner" />
+                            className="flex-1 border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" />
                         <button onClick={handleTest} disabled={testing}
-                            className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-black hover:bg-emerald-700 disabled:opacity-60 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap">
+                            className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-black hover:bg-emerald-700 disabled:opacity-60 transition-all hover:-translate-y-0.5 whitespace-nowrap">
                             <TestTube size={18} className="text-emerald-100" />{testing ? 'Sending...' : 'Run Test'}
                         </button>
                     </div>

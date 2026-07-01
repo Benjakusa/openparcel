@@ -38,10 +38,10 @@ export default function HomePage() {
 
             <div className="relative z-10 flex flex-col min-h-screen">
                 {/* Navbar */}
-<nav className="sticky top-0 z-50 glass-card bg-white/80 backdrop-blur-xl border-b border-white shadow-sm">
+<nav className="sticky top-0 z-50 glass-card bg-white/80 backdrop-blur-xl border-b border-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 sm:h-20">
         <div className="flex items-center">
-            <span className="font-black text-xl sm:text-2xl tracking-tight text-slate-900 drop-shadow-sm">
+            <span className="font-black text-xl sm:text-2xl tracking-tight text-slate-900">
                 OpenDesk<span className="text-blue-700">Parcel</span>
             </span>
         </div>
@@ -50,7 +50,7 @@ export default function HomePage() {
                 <span className="hidden sm:inline">Login</span>
                 <LogIn size={20} className="sm:hidden" />
             </Link>
-            <Link to="/register" className="bg-slate-900 text-white px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-slate-800">
+            <Link to="/register" className="bg-slate-900 text-white px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold hover:bg-blue-700 transition-all hover:-translate-y-0.5 border border-slate-800">
                 Get Started
             </Link>
         </div>
@@ -68,10 +68,10 @@ export default function HomePage() {
                             Multi-tenant SaaS for companies managing parcel logistics. M-Pesa payments, QR stickers, WhatsApp updates — all in one platform.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/register" className="bg-blue-700 text-white font-black px-8 py-4 rounded-2xl hover:bg-blue-800 hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center gap-3 text-base shadow-lg border border-blue-600">
+                            <Link to="/register" className="bg-blue-700 text-white font-black px-8 py-4 rounded-2xl hover:bg-blue-800 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 text-base border border-blue-600">
                                 Start Your Trial <ArrowRight size={20} strokeWidth={3} />
                             </Link>
-                            <Link to="/login" className="glass-card bg-white/80 border border-white text-slate-900 font-black px-8 py-4 rounded-2xl hover:bg-white transition-all text-base text-center shadow-lg hover:-translate-y-1">
+                            <Link to="/login" className="glass-card bg-white/80 border border-white text-slate-900 font-black px-8 py-4 rounded-2xl hover:bg-white transition-all text-base text-center hover:-translate-y-1">
                                 Sign In
                             </Link>
                         </div>
@@ -81,12 +81,12 @@ export default function HomePage() {
                 {/* Features */}
                 <section className="py-16 px-4">
                     <div className="max-w-6xl mx-auto">
-                        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 text-center mb-4 drop-shadow-sm">Everything you need</h2>
-                        <p className="text-center text-slate-800 mb-14 font-bold text-base sm:text-lg drop-shadow-sm">One platform for your entire parcel operations</p>
+                        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 text-center mb-4">Everything you need</h2>
+                        <p className="text-center text-slate-800 mb-14 font-bold text-base sm:text-lg">One platform for your entire parcel operations</p>
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {features.map((f) => (
-                                <div key={f.title} className="glass-card bg-white/70 backdrop-blur-lg border border-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-2xl hover:-translate-y-2 transition-all p-6 rounded-3xl group">
-                                    <div className="w-12 h-12 bg-white rounded-2xl shadow-md border border-gray-100 flex items-center justify-center mb-4 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                                <div key={f.title} className="glass-card bg-white/70 backdrop-blur-lg border border-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all p-6 rounded-3xl group">
+                                    <div className="w-12 h-12 bg-white rounded-2xl border border-gray-100 flex items-center justify-center mb-4 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
                                         <f.icon size={24} strokeWidth={2.5} />
                                     </div>
                                     <h3 className="font-black text-slate-900 mb-3 text-lg">{f.title}</h3>
@@ -100,13 +100,13 @@ export default function HomePage() {
                 {/* Pricing */}
                 <section className="py-16 px-4 mb-16">
                     <div className="max-w-5xl mx-auto">
-                        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 text-center mb-4 drop-shadow-sm">Simple Pricing</h2>
-                        <p className="text-center text-slate-800 mb-14 font-bold text-base sm:text-lg drop-shadow-sm">Transparent plans to scale your logistics</p>
+                        <h2 className="text-2xl lg:text-3xl font-black text-slate-900 text-center mb-4">Simple Pricing</h2>
+                        <p className="text-center text-slate-800 mb-14 font-bold text-base sm:text-lg">Transparent plans to scale your logistics</p>
                         <div className="grid md:grid-cols-2 gap-8">
                             {plans.map((plan) => (
-                                <div key={plan.id} className={`glass-card backdrop-blur-xl p-8 relative transition-all duration-300 rounded-3xl ${plan.highlight ? 'bg-blue-50/90 border-2 border-blue-400 shadow-[0_20px_40px_rgba(0,0,0,0.12)] scale-[1.02] md:scale-105' : 'bg-white/70 border border-white shadow-xl hover:scale-[1.02]'}`}>
+                                <div key={plan.id} className={`glass-card backdrop-blur-xl p-8 relative transition-all duration-300 rounded-3xl ${plan.highlight ? 'bg-blue-50/90 border-2 border-blue-400 shadow-[0_20px_40px_rgba(0,0,0,0.12)] scale-[1.02] md:scale-105' : 'bg-white/70 border border-white hover:scale-[1.02]'}`}>
                                     {plan.highlight && (
-                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-700 shadow-xl text-white text-xs font-black px-5 py-2 rounded-full uppercase tracking-wider">
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-700 text-white text-xs font-black px-5 py-2 rounded-full uppercase tracking-wider">
                                             BEST VALUE
                                         </div>
                                     )}
@@ -125,7 +125,7 @@ export default function HomePage() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <Link to="/register" className={`block w-full text-center py-4 rounded-2xl font-black text-base transition-all shadow-md hover:shadow-xl ${plan.highlight ? 'bg-blue-700 text-white hover:bg-blue-800 border border-blue-600' : 'glass-card bg-white/90 text-slate-900 border border-white hover:bg-white hover:text-blue-700'}`}>
+                                    <Link to="/register" className={`block w-full text-center py-4 rounded-2xl font-black text-base transition-all ${plan.highlight ? 'bg-blue-700 text-white hover:bg-blue-800 border border-blue-600' : 'glass-card bg-white/90 text-slate-900 border border-white hover:bg-white hover:text-blue-700'}`}>
                                         Start Your Journey
                                     </Link>
                                 </div>
@@ -136,7 +136,7 @@ export default function HomePage() {
 
                 {/* Footer */}
                 <footer className="mt-auto py-10 bg-white text-center text-sm font-bold text-black w-full z-10 rounded-t-3xl border-t border-gray-200 flex flex-col items-center justify-center gap-3">
-                    <span className="font-black text-xl tracking-tight text-black drop-shadow-sm">
+                    <span className="font-black text-xl tracking-tight text-black">
                         OpenDesk<span className="text-blue-600">Parcel</span>
                     </span>
                     <span>© {new Date().getFullYear()}. Built for Kenyan logistics.</span>

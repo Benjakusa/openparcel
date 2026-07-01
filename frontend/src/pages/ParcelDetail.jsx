@@ -151,7 +151,7 @@ export default function ParcelDetail() {
                         )}
 
                         {parcel.status === 'created' && parcel.sending_office_id === user.office_id && (
-                            <Link to={`/scan?mode=dispatch&id=${parcel.tracking_id}`} className="flex flex-col items-center justify-center gap-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 col-span-2 shadow-sm transition-colors cursor-pointer">
+                            <Link to={`/scan?mode=dispatch&id=${parcel.tracking_id}`} className="flex flex-col items-center justify-center gap-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 col-span-2 transition-colors cursor-pointer">
                                 <div className="flex gap-2 items-center"><Send size={15} /> Scan to Dispatch</div>
                             </Link>
                         )}

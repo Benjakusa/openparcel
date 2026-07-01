@@ -10,7 +10,7 @@ export default function OnboardingPage() {
             <div className="relative z-10 w-full max-w-sm animate-fadeIn">
                 {/* Logo */}
                 <div className="text-center mb-10">
-                    <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                    <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <Package size={32} className="text-white" strokeWidth={2} />
                     </div>
                     <h1 className="font-black text-3xl tracking-tight text-slate-900">
@@ -22,7 +22,7 @@ export default function OnboardingPage() {
                 </div>
 
                 {/* Action cards */}
-                <div className="glass-card p-6 space-y-4 shadow-lg">
+                <div className="glass-card p-6 space-y-4">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center mb-2">
                         Get started
                     </p>
@@ -30,7 +30,7 @@ export default function OnboardingPage() {
                     {/* Sign in */}
                     <Link
                         to="/login"
-                        className="flex items-center justify-between w-full bg-slate-900 hover:bg-blue-700 text-white px-5 py-4 rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 group"
+                        className="flex items-center justify-between w-full bg-slate-900 hover:bg-blue-700 text-white px-5 py-4 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 group"
                     >
                         <div className="flex items-center gap-3">
                             <LogIn size={18} strokeWidth={2.5} />

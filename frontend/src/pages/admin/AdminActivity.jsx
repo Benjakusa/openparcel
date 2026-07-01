@@ -40,28 +40,28 @@ export default function AdminActivity() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary shadow-sm">
+      <div className="glass-card p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-primary">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center"><Activity size={24} className="text-purple-600" /></div>
           <div>
-            <h1 className="text-2xl font-black text-primary drop-shadow-sm">Platform Activity</h1>
+            <h1 className="text-2xl font-black text-primary">Platform Activity</h1>
             <p className="text-sm font-medium text-gray-500">Audit trail across all tenants</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <select value={actionFilter} onChange={e => { setActionFilter(e.target.value); setPage(1); }}
-            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm">
+            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">All actions</option>
             {ACTIONS.map(a => <option key={a} value={a}>{a.replace(/_/g, ' ')}</option>)}
           </select>
-          <button onClick={fetchLogs} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary hover:shadow-md transition-all">
+          <button onClick={fetchLogs} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all">
             <RefreshCw size={18} />
           </button>
         </div>
       </div>
 
       {/* Activity Feed */}
-      <div className="glass-card p-0 shadow-sm overflow-hidden">
+      <div className="glass-card p-0 overflow-hidden">
         {loading ? (
           <div className="py-12 text-center font-bold uppercase tracking-widest text-xs text-gray-400">Loading...</div>
         ) : logs.length === 0 ? (

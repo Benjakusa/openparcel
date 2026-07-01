@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 function StatCard({ icon: Icon, label, value, accentColor, sub }) {
     return (
         <div className="glass-card p-6 hover:-translate-y-1 transition-all group">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 shadow-inner ${accentColor}`}>
-                <Icon size={22} className="text-white drop-shadow-sm" />
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ${accentColor}`}>
+                <Icon size={22} className="text-white" />
             </div>
-            <div className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm">{value}</div>
+            <div className="text-xl sm:text-2xl font-black text-primary">{value}</div>
             <div className="text-xs sm:text-sm font-medium text-gray-500 mt-1">{label}</div>
             {sub && <div className="text-xs text-gray-400 mt-1">{sub}</div>}
         </div>
@@ -69,7 +69,7 @@ export default function CompanyDashboard() {
             )}
 
             <div className="glass-card p-5 sm:p-6 border-l-4 border-accent">
-                <h1 className="text-xl sm:text-2xl font-black text-primary drop-shadow-sm mb-1">{company?.name}</h1>
+                <h1 className="text-xl sm:text-2xl font-black text-primary mb-1">{company?.name}</h1>
                 <p className="text-gray-500 font-medium text-xs sm:text-sm">
                     {isTrialing ? `Free trial – ${daysLeft} days left` : `Plan: ${company?.subscription_plan || 'None'} · Status: ${company?.subscription_status}`}
                 </p>
@@ -92,7 +92,7 @@ export default function CompanyDashboard() {
                 <div className="glass-card p-6">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-lg font-black text-primary">Parcel Status Breakdown</h2>
-                        <button onClick={() => { setRefreshing(true); fetchDashboard(); }} className="p-2 text-gray-400 hover:text-accent bg-white/50 rounded-xl shadow-sm hover:shadow transition-all" title="Refresh Breakdown">
+                        <button onClick={() => { setRefreshing(true); fetchDashboard(); }} className="p-2 text-gray-400 hover:text-accent bg-white/50 rounded-xl transition-all" title="Refresh Breakdown">
                             <RefreshCw size={18} className={refreshing ? 'animate-spin text-accent' : ''} />
                         </button>
                     </div>

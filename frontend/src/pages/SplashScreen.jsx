@@ -10,7 +10,7 @@ export default function SplashScreen({ onDone }) {
     return (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-50 animate-fadeIn">
             <div className="flex flex-col items-center gap-6">
-                <div className="w-20 h-20 bg-slate-900 rounded-2xl flex items-center justify-center shadow-xl">
+                <div className="w-20 h-20 bg-slate-900 rounded-2xl flex items-center justify-center">
                     <Package size={40} className="text-white" strokeWidth={2} />
                 </div>
                 <span className="font-black text-3xl tracking-tight text-slate-900">
