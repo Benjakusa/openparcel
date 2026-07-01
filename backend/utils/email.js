@@ -32,4 +32,22 @@ async function sendVerificationEmail(email, token) {
     });
 }
 
+async function sendPasswordResetEmail(email, token) {
+    const t = getTransporter();
+    if (!t) {
+        console.warn(`[EMAIL] Skipping password reset email to ${email} — EMAIL_HOST/USER/PASS not configured`);
+        return;
+    }
+    const baseUrl = process.env.BASE_URL || 'https://openparcel-5f7k.onrender.com';
+    const link = `${baseUrl}/reset-password/${token}`;
+    await t.sendMail({
+        from: `"OpenDesk Parcel" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Reset your OpenDesk Parcel password',
+        html: `<p>Click <a href="${link}">here</a> to reset your password.</p><p>Or paste this link: ${link}</p><p>This link expires in 1 hour.</p>`,
+    });
+}
+
+module.exports = { sendVerificationEmail, sendPasswordResetEmail };
+
 module.exports = { sendVerificationEmail };

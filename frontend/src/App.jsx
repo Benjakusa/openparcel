@@ -33,6 +33,8 @@ import OfficeParcels from './pages/office/OfficeParcels';
 import ParcelDetail from './pages/ParcelDetail';
 import ScanPage from './pages/ScanPage';
 import PrintPage from './pages/PrintPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import OfficeSuspended from './pages/office/OfficeSuspended';
 
 // Guard: require auth + optional role check
@@ -80,6 +82,8 @@ function AppRoutes() {
       {/* Auth */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
       {/* Role redirect after login */}
       <Route path="/dashboard" element={<RoleRedirect />} />

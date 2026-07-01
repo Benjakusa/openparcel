@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { z } = require('zod');
 const db = require('../db');
-const { sendVerificationEmail } = require('../utils/email');
+const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/email');
 
 const passwordSchema = z.string()
     .min(8, 'Password must be at least 8 characters')
@@ -250,6 +250,67 @@ router.post('/logout', async (req, res) => {
         }
         res.json({ message: 'Logged out' });
     } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// ─── FORGOT / RESET PASSWORD ──────────────────────────────────────────────────
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email } = z.object({ email: z.string().email() }).parse(req.body);
+        const { rows } = await db.query('SELECT id FROM users WHERE email=$1', [email]);
+        if (!rows.length) return res.json({ message: 'If that email is registered, a reset link has been sent.' });
+
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+        await db.query(
+            'UPDATE users SET password_reset_token=$1, password_reset_expires_at=$2 WHERE email=$3',
+            [token, expiresAt, email]
+        );
+
+        const emailConfigured = !!(process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS);
+        if (emailConfigured) {
+            sendPasswordResetEmail(email, token).catch(err => console.error('[EMAIL] Failed to send reset:', err));
+        }
+
+        res.json({
+            message: 'If that email is registered, a reset link has been sent.',
+            reset_token: emailConfigured ? undefined : token,
+        });
+    } catch (err) {
+        if (err instanceof z.ZodError) {
+            return res.status(400).json({ message: 'Validation error', errors: err.errors.map(e => ({ path: e.path.join('.'), message: e.message })) });
+        }
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+router.post('/reset-password/:token', async (req, res) => {
+    try {
+        const token = req.params.token;
+        const { password } = z.object({ password: z.string().min(8) }).parse(req.body);
+
+        const { rows } = await db.query(
+            `SELECT id FROM users
+             WHERE password_reset_token=$1 AND password_reset_expires_at > NOW()`,
+            [token]
+        );
+        if (!rows.length) return res.status(400).json({ message: 'Invalid or expired reset token' });
+
+        const hash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS || '12', 10));
+        await db.query(
+            `UPDATE users SET password_hash=$1, password_reset_token=NULL, password_reset_expires_at=NULL
+             WHERE id=$2`,
+            [hash, rows[0].id]
+        );
+
+        res.json({ message: 'Password has been reset. You can now log in.' });
+    } catch (err) {
+        if (err instanceof z.ZodError) {
+            return res.status(400).json({ message: 'Validation error', errors: err.errors.map(e => ({ path: e.path.join('.'), message: e.message })) });
+        }
+        console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
 });

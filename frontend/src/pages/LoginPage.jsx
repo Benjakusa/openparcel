@@ -75,12 +75,15 @@ export default function LoginPage() {
                         </button>
                     </form>
 
-                    <p className="text-center text-sm text-gray-500 mt-8">
+                    <div className="text-right text-xs mt-2">
+                        <Link to="/forgot-password" className="text-gray-400 hover:text-accent transition-colors font-medium">Forgot password?</Link>
+                    </div>
+                    <p className="text-center text-sm text-gray-500 mt-6">
                         New company?{' '}
                         <Link to="/register" className="text-accent font-semibold hover:underline">Register here</Link>
                     </p>
                     <p className="text-center text-xs text-gray-400 mt-3 pt-3 border-t border-gray-200/50">
-                        <Link to="/" className="hover:text-accent transition-colors">← Back to home</Link>
+                        <Link to="/onboarding" className="hover:text-accent transition-colors">← Back to home</Link>
                     </p>
                 </div>
             </div>
