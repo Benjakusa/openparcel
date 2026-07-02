@@ -52,8 +52,8 @@ export default function CompanySubscription() {
                     <CreditCard size={24} className="text-primary" />
                 </div>
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-black text-primary">Subscription</h1>
-                    <p className="text-sm font-medium text-gray-500">Manage your billing and platform access</p>
+                    <h1 className="text-base sm:text-base font-semibold text-primary">Subscription</h1>
+                    <p className="text-sm font-normal text-gray-500">Manage your billing and platform access</p>
                 </div>
             </div>
 
@@ -65,9 +65,9 @@ export default function CompanySubscription() {
                         {isActive ? <CheckCircle className="text-emerald-500" size={26} /> : <Clock className="text-amber-500" size={26} />}
                     </div>
                     <div>
-                        <div className="font-black text-2xl text-primary capitalize">{status?.subscription_status}</div>
-                        {isActive && <div className="text-sm font-medium text-gray-600 mt-1">Plan: <span className="font-bold">{status?.subscription_plan}</span> <span className="text-gray-300 mx-2">|</span> Expires: <span className="font-bold">{status?.subscription_end_date ? new Date(status.subscription_end_date).toLocaleDateString() : 'Never'}</span></div>}
-                        {isTrialing && <div className="text-sm font-bold text-amber-600 mt-1 bg-amber-50 px-2.5 py-1 rounded-md inline-block border border-amber-100">{daysLeft} day(s) remaining in free trial</div>}
+                        <div className="font-normal text-sm text-primary capitalize">{status?.subscription_status}</div>
+                        {isActive && <div className="text-sm font-normal text-gray-600 mt-1">Plan: <span className="font-normal">{status?.subscription_plan}</span> <span className="text-gray-300 mx-2">|</span> Expires: <span className="font-normal">{status?.subscription_end_date ? new Date(status.subscription_end_date).toLocaleDateString() : 'Never'}</span></div>}
+                        {isTrialing && <div className="text-sm font-normal text-amber-600 mt-1 bg-amber-50 px-2.5 py-1 rounded-md inline-block border border-amber-100">{daysLeft} day(s) remaining in free trial</div>}
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@ export default function CompanySubscription() {
             {/* Buy plan section */}
             {!isActive && (
                 <div className="space-y-6">
-                    <h2 className="font-black text-xl text-primary mb-2 flex items-center gap-2">
+                    <h2 className="font-semibold text-base text-primary mb-2 flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-accent"></span> Choose a Plan
                     </h2>
                     <div className="grid sm:grid-cols-2 gap-5">
@@ -83,28 +83,28 @@ export default function CompanySubscription() {
                             <div key={plan.id} onClick={() => setSelectedPlan(plan.id)}
                                 className={`cursor-pointer rounded-2xl border-2 p-6 transition-all flex flex-col justify-between ${selectedPlan === plan.id ? 'border-accent bg-accent/5 scale-[1.02]' : 'border-white/60 bg-white/40 hover:bg-white hover:shadow-md'}`}>
                                 <div>
-                                    <div className="font-bold text-primary uppercase text-xs tracking-wide">{plan.label}</div>
-                                    <div className="text-3xl font-black text-accent mt-2">KES {plan.price.toLocaleString()}</div>
-                                    <div className="text-sm font-medium text-gray-500 mt-3">{plan.desc}</div>
+                                    <div className="font-normal text-primary uppercase text-xs tracking-wide">{plan.label}</div>
+                                    <div className="text-sm font-normal text-accent mt-2">KES {plan.price.toLocaleString()}</div>
+                                    <div className="text-sm font-normal text-gray-500 mt-3">{plan.desc}</div>
                                 </div>
-                                {selectedPlan === plan.id && <div className="mt-4 text-xs bg-accent/10 border border-accent/20 text-accent font-bold px-3 py-1.5 rounded-lg inline-flex w-max items-center gap-1.5"><CheckCircle size={14} /> Selected</div>}
+                                {selectedPlan === plan.id && <div className="mt-4 text-xs bg-accent/10 border border-accent/20 text-accent font-normal px-3 py-1.5 rounded-lg inline-flex w-max items-center gap-1.5"><CheckCircle size={14} /> Selected</div>}
                             </div>
                         ))}
                     </div>
 
                     {selectedPlan && (
                         <div className="glass-card bg-white/60 border border-white p-6 sm:p-8 animate-fadeIn mt-2">
-                            <h3 className="font-black text-lg text-primary mb-4 flex items-center gap-2 uppercase tracking-wide text-sm"><Smartphone size={20} className="text-accent" /> Pay via M-Pesa STK Push</h3>
+                            <h3 className="font-semibold text-base text-primary mb-4 flex items-center gap-2 uppercase tracking-wide text-sm"><Smartphone size={20} className="text-accent" /> Pay via M-Pesa STK Push</h3>
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <input value={phone} onChange={e => setPhone(e.target.value)}
                                     placeholder="Your phone e.g. 0708374149"
-                                    className="flex-1 border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
+                                    className="flex-1 border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3.5 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
                                 <button onClick={handleBuy} disabled={paying}
-                                    className="bg-primary text-white px-8 py-3.5 rounded-xl text-base font-black hover:bg-secondary disabled:opacity-60 transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                                    className="px-8 py-3.5 rounded-xl text-sm font-normal disabled:opacity-60 whitespace-nowrap btn-base btn-primary">
                                     {paying ? 'Sending...' : 'Pay Now'}
                                 </button>
                             </div>
-                            <p className="text-xs font-semibold text-gray-500 mt-3 flex items-center gap-1.5"><Shield size={14} className="text-gray-400" /> An STK Push will be sent to your phone. Enter your M-Pesa PIN to complete.</p>
+                            <p className="text-xs font-normal text-gray-500 mt-3 flex items-center gap-1.5"><Shield size={14} className="text-gray-400" /> An STK Push will be sent to your phone. Enter your M-Pesa PIN to complete.</p>
                         </div>
                     )}
                 </div>

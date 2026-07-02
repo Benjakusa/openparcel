@@ -45,8 +45,8 @@ export default function CompanyMpesa() {
                     <Settings size={24} className="text-primary" />
                 </div>
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-black text-primary">M-Pesa Settings</h1>
-                    <p className="text-sm font-medium text-gray-500">Configure your company's credentials for collecting parcel fees</p>
+                    <h1 className="text-base sm:text-base font-semibold text-primary">M-Pesa Settings</h1>
+                    <p className="text-sm font-normal text-gray-500">Configure your company's credentials for collecting parcel fees</p>
                 </div>
             </div>
 
@@ -57,38 +57,38 @@ export default function CompanyMpesa() {
                         <Shield className="text-emerald-500" size={24} />
                     </div>
                     <div className="relative z-10">
-                        <div className="font-black text-emerald-800 text-lg uppercase tracking-wide">M-Pesa Configured</div>
-                        <div className="text-sm font-semibold text-emerald-600 mt-0.5">Shortcode: {config.shortcode} <span className="opacity-50 mx-1">•</span> <span className="uppercase">{config.environment}</span></div>
+                        <div className="font-normal text-emerald-800 text-sm uppercase tracking-wide">M-Pesa Configured</div>
+                        <div className="text-sm font-normal text-emerald-600 mt-0.5">Shortcode: {config.shortcode} <span className="opacity-50 mx-1">•</span> <span className="uppercase">{config.environment}</span></div>
                     </div>
                 </div>
             )}
 
             <div className="glass-card bg-white/60 border border-white p-6 sm:p-8">
-                <h2 className="font-black text-xl text-primary mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-accent"></span>{config?.configured ? 'Update Credentials' : 'Configure M-Pesa'}</h2>
+                <h2 className="font-semibold text-base text-primary mb-5 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-accent"></span>{config?.configured ? 'Update Credentials' : 'Configure M-Pesa'}</h2>
                 <form onSubmit={handleSave} className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-5">
                         {[['shortcode', 'Shortcode / Paybill', true], ['consumerKey', 'Consumer Key', true], ['consumerSecret', 'Consumer Secret', true], ['passkey', 'Passkey', true]].map(([key, label, req]) => (
                             <div key={key} className="col-span-2 sm:col-span-1">
-                                <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1.5">{label}</label>
+                                <label className="block text-xs font-normal uppercase tracking-wide text-gray-500 mb-1.5">{label}</label>
                                 <input type={['consumerSecret', 'passkey'].includes(key) ? 'password' : 'text'} required={req}
                                     value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                                     placeholder={config?.configured ? '(leave blank to keep)' : ''}
-                                    className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
+                                    className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all" />
                             </div>
                         ))}
                     </div>
                     <div>
-                        <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1.5">Environment</label>
+                        <label className="block text-xs font-normal uppercase tracking-wide text-gray-500 mb-1.5">Environment</label>
                         <select value={form.environment} onChange={e => setForm(f => ({ ...f, environment: e.target.value }))}
-                            className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all">
+                            className="w-full border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all">
                             <option value="sandbox">Sandbox (testing)</option>
                             <option value="production">Production</option>
                         </select>
                     </div>
-                    <div className="bg-white/50 border border-white rounded-xl p-4 text-xs font-semibold text-gray-500 flex gap-2">
+                    <div className="bg-white/50 border border-white rounded-xl p-4 text-xs font-normal text-gray-500 flex gap-2">
                         <span>🔒</span> <span>Credentials are encrypted using AES-256-CBC before storage. Never stored in plaintext.</span>
                     </div>
-                    <button type="submit" disabled={saving} className="w-full sm:w-auto bg-primary text-white px-8 py-3.5 rounded-xl font-black hover:bg-secondary disabled:opacity-60 text-base transition-all hover:-translate-y-0.5">
+                    <button type="submit" disabled={saving} className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-normal disabled:opacity-60 text-sm btn-base btn-primary">
                         {saving ? 'Saving...' : 'Save Credentials'}
                     </button>
                 </form>
@@ -97,17 +97,17 @@ export default function CompanyMpesa() {
             {config?.configured && (
                 <div className="glass-card bg-white/60 border border-white p-6 sm:p-8 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-emerald-500/10 to-transparent blur-xl rounded-bl-full pointer-events-none -mr-4 -mt-4"></div>
-                    <h2 className="font-black text-xl text-primary mb-4 flex items-center gap-2 relative z-10"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Test M-Pesa Integration (KES 1)</h2>
+                    <h2 className="font-semibold text-base text-primary mb-4 flex items-center gap-2 relative z-10"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Test M-Pesa Integration (KES 1)</h2>
                     <div className="flex flex-col sm:flex-row gap-3 relative z-10">
                         <input value={testPhone} onChange={e => setTestPhone(e.target.value)}
                             placeholder="Testing Phone e.g. 0708374149"
-                            className="flex-1 border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" />
+                            className="flex-1 border border-gray-200/60 bg-white/70 rounded-xl px-4 py-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" />
                         <button onClick={handleTest} disabled={testing}
-                            className="flex items-center justify-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-black hover:bg-emerald-700 disabled:opacity-60 transition-all hover:-translate-y-0.5 whitespace-nowrap">
+                            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-normal disabled:opacity-60 whitespace-nowrap btn-base btn-primary">
                             <TestTube size={18} className="text-emerald-100" />{testing ? 'Sending...' : 'Run Test'}
                         </button>
                     </div>
-                    <p className="text-xs font-semibold text-gray-500 mt-3 relative z-10 pl-1">For Sandbox testing: use phone 254708374149, PIN 1234</p>
+                    <p className="text-xs font-normal text-gray-500 mt-3 relative z-10 pl-1">For Sandbox testing: use phone 254708374149, PIN 1234</p>
                 </div>
             )}
         </div>

@@ -15,9 +15,9 @@ function HealthCard({ icon: Icon, label, value, status }) {
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorMap[status] || 'bg-gray-400'}`}>
           <Icon size={20} className="text-white" />
         </div>
-        <div className="text-xs font-bold text-gray-500 uppercase tracking-wide">{label}</div>
+        <div className="text-xs font-normal text-gray-500 uppercase tracking-wide">{label}</div>
       </div>
-      <div className={`text-lg font-black ${status === 'error' ? 'text-red-600' : 'text-primary'}`}>{value ?? '—'}</div>
+      <div className={`text-sm font-normal ${status === 'error' ? 'text-red-600' : 'text-primary'}`}>{value ?? '—'}</div>
     </div>
   );
 }
@@ -42,11 +42,11 @@ export default function AdminHealth() {
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center"><HeartPulse size={24} className="text-emerald-600" /></div>
           <div>
-            <h1 className="text-2xl font-black text-primary">System Health</h1>
-            <p className="text-sm font-medium text-gray-500">Platform infrastructure and operational status</p>
+            <h1 className="text-base font-semibold text-primary">System Health</h1>
+            <p className="text-sm font-normal text-gray-500">Platform infrastructure and operational status</p>
           </div>
         </div>
-        <button onClick={fetchHealth} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all">
+        <button onClick={fetchHealth} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl btn-base btn-secondary">
           <RefreshCw size={18} />
         </button>
       </div>
@@ -56,18 +56,18 @@ export default function AdminHealth() {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <XCircle size={32} className="text-red-500" />
           </div>
-          <div className="text-lg font-bold text-red-600">Connection Error</div>
+          <div className="text-sm font-normal text-red-600">Connection Error</div>
           <div className="text-sm text-gray-500 mt-1">{error}</div>
         </div>
       ) : !health ? (
-        <div className="py-12 text-center font-bold uppercase tracking-widest text-xs text-gray-400 animate-pulse">Loading system status...</div>
+        <div className="py-12 text-center font-normal uppercase tracking-widest text-xs text-gray-400 animate-pulse">Loading system status...</div>
       ) : (
         <>
           {/* Status Banner */}
           <div className={`glass-card p-5 ${health.db_status === 'connected' ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'} border flex items-center gap-3`}>
             {health.db_status === 'connected'
-              ? <><CheckCircle size={20} className="text-emerald-600" /><span className="font-bold text-emerald-700">All systems operational</span></>
-              : <><XCircle size={20} className="text-red-600" /><span className="font-bold text-red-700">System issues detected</span></>}
+              ? <><CheckCircle size={20} className="text-emerald-600" /><span className="font-normal text-emerald-700">All systems operational</span></>
+              : <><XCircle size={20} className="text-red-600" /><span className="font-normal text-red-700">System issues detected</span></>}
           </div>
 
           {/* Grid */}
@@ -82,8 +82,8 @@ export default function AdminHealth() {
 
           {/* Uptime */}
           <div className="glass-card bg-white/60 p-5 border border-white/60">
-            <h3 className="font-black text-primary text-sm uppercase tracking-wide mb-2 flex items-center gap-2"><Clock size={16} /> Server Uptime</h3>
-            <div className="text-lg font-bold text-primary">
+            <h3 className="font-semibold text-primary text-sm uppercase tracking-wide mb-2 flex items-center gap-2"><Clock size={16} /> Server Uptime</h3>
+            <div className="text-sm font-normal text-primary">
               {health.uptime ? `${Math.floor(health.uptime / 86400)}d ${Math.floor((health.uptime % 86400) / 3600)}h ${Math.floor((health.uptime % 3600) / 60)}m` : '—'}
             </div>
           </div>

@@ -97,20 +97,14 @@ router.post('/register', async (req, res) => {
         const companyId = compRes.rows[0].id;
         const emailConfigured = !!(process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS);
         await db.query(
-            `INSERT INTO users (company_id, email, password_hash, role, email_verification_token, email_verification_sent_at, email_verified)
-             VALUES ($1, $2, $3, 'company_admin', $4, NOW(), $5)`,
-            [companyId, adminEmail, hash, verificationToken, !emailConfigured]
+            `INSERT INTO users (company_id, email, password_hash, role, email_verified)
+             VALUES ($1, $2, $3, 'company_admin', TRUE)`,
+            [companyId, adminEmail, hash]
         );
         await db.query('COMMIT');
-        if (emailConfigured) {
-            sendVerificationEmail(adminEmail, verificationToken).catch(err => console.error('[EMAIL] Failed to send:', err));
-        }
 
         res.status(201).json({
-            message: emailConfigured
-                ? 'Registration successful. Please check your email to verify your account before logging in.'
-                : 'Registration successful. You can now log in.',
-            verification_token: emailConfigured ? undefined : verificationToken,
+            message: 'Registration successful. You can now log in.',
         });
     } catch (err) {
         if (err instanceof z.ZodError) {
@@ -172,7 +166,6 @@ router.post('/login', async (req, res) => {
         await resetFailedAttempts(email);
 
         if (user.role !== 'super_admin') {
-            if (!user.email_verified) return res.status(403).json({ message: 'Please verify your email before logging in.' });
             if (!user.approved) return res.status(403).json({ message: 'Account pending approval.' });
         }
 

@@ -134,8 +134,8 @@ router.delete('/offices/:id', companyAuth, async (req, res) => {
 router.get('/staff', companyAuth, async (req, res) => {
     try {
         const { rows } = await db.query(
-            `SELECT u.id, u.email, u.full_name, u.phone, u.role, u.created_at, u.active,
-                    o.name as office_name, o.id as office_id
+            `SELECT u.id, u.email, u.full_name, u.phone, u.role, u.created_at,
+                     o.name as office_name, o.id as office_id
              FROM users u LEFT JOIN offices o ON o.id = u.office_id
              WHERE u.company_id=$1 AND u.role='office_staff'
              ORDER BY u.created_at DESC`,

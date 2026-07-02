@@ -23,7 +23,7 @@ const createOfficeSchema = z.object({
 const createStaffSchema = z.object({
     email: z.string().email('Invalid email'),
     password: passwordSchema,
-    fullName: z.string().min(1, 'Full name required').max(100).optional(),
+    fullName: z.string().max(100).optional(),
     phone: z.string().max(20).optional(),
     officeId: z.coerce.number().int().positive('Valid office ID required'),
 });

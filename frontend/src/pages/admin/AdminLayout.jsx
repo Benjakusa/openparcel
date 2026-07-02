@@ -37,7 +37,7 @@ export default function AdminLayout() {
           {/* Full wordmark: visible on mobile off-canvas + lg desktop */}
           <div className="flex items-center gap-2 md:hidden lg:flex">
             <Package size={20} className="text-accent shrink-0" />
-            <span className="font-black text-base tracking-tight text-gray-900">
+            <span className="font-normal text-sm tracking-tight text-gray-900">
               OpenDesk<span className="text-blue-600">Parcel</span>
             </span>
           </div>
@@ -46,7 +46,7 @@ export default function AdminLayout() {
             <Package size={22} className="text-accent" />
           </div>
           {/* Close button — mobile only */}
-          <button className="md:hidden text-gray-400 hover:text-gray-700 p-1 rounded-lg" onClick={() => setMobileMenuOpen(false)}>
+          <button className="md:hidden p-1 rounded-lg btn-base btn-secondary" onClick={() => setMobileMenuOpen(false)}>
             <X size={18} />
           </button>
         </div>
@@ -61,10 +61,10 @@ export default function AdminLayout() {
               onClick={() => setMobileMenuOpen(false)}
               data-tooltip={label}
               className={({ isActive }) =>
-                `sidebar-tooltip flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors
+                `sidebar-tooltip flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-normal transition-colors
                 md:justify-center lg:justify-start
                 ${isActive
-                  ? 'bg-accent text-white shadow-sm'
+                  ? 'bg-accent/60 text-white shadow-sm'
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                 }`
               }
@@ -84,7 +84,7 @@ export default function AdminLayout() {
           <button
             onClick={handleLogout}
             data-tooltip="Logout"
-            className="sidebar-tooltip flex items-center gap-2 text-gray-500 font-bold hover:text-red-500 text-sm transition-colors w-full p-2.5 hover:bg-red-50 rounded-xl md:justify-center lg:justify-start"
+            className="sidebar-tooltip flex items-center gap-2 font-normal text-sm w-full p-2.5 rounded-xl md:justify-center lg:justify-start btn-base btn-secondary"
           >
             <LogOut size={16} className="shrink-0" />
             <span className="md:hidden lg:block">Logout</span>
@@ -102,10 +102,10 @@ export default function AdminLayout() {
           >
             <Menu size={18} />
           </button>
-          <span className="font-black text-base tracking-tight text-gray-900">
+          <span className="font-normal text-sm tracking-tight text-gray-900">
             OpenDesk<span className="text-blue-600">Parcel</span>
           </span>
-          <button onClick={handleLogout} className="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-xl border border-red-100">
+          <button onClick={handleLogout} className="text-red-500 p-2 rounded-xl border border-red-100 btn-base btn-destructive">
             <LogOut size={18} />
           </button>
         </header>
@@ -114,7 +114,7 @@ export default function AdminLayout() {
         <div className="hidden md:flex px-6 pt-5 pb-0 items-center">
           <button
             onClick={() => navigate(-1)}
-            className="text-gray-500 hover:text-gray-900 transition-colors font-bold text-sm bg-white px-4 py-2 rounded-xl border border-gray-200 flex items-center gap-2 hover:border-gray-300 hover:-translate-x-0.5 duration-150"
+            className="text-gray-500 hover:text-gray-900 transition-colors font-normal text-sm bg-white px-4 py-2 rounded-xl border border-gray-200 flex items-center gap-2 hover:border-gray-300 hover:-translate-x-0.5 duration-150"
           >
             <ArrowLeft size={15} /> Back
           </button>

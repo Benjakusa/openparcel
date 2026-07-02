@@ -13,7 +13,7 @@ export default function SplashScreen({ onDone }) {
                 <div className="w-20 h-20 bg-slate-900 rounded-2xl flex items-center justify-center">
                     <Package size={40} className="text-white" strokeWidth={2} />
                 </div>
-                <span className="font-black text-xl tracking-tight text-slate-900">
+                <span className="font-normal text-sm tracking-tight text-slate-900">
                     OpenDesk<span className="text-blue-700">Parcel</span>
                 </span>
                 <div className="flex gap-1.5 mt-2">

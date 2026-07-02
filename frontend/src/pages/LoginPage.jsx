@@ -34,17 +34,17 @@ export default function LoginPage() {
             <div className="w-full max-w-md animate-fadeIn">
                 <div className="text-center mb-8">
                     <div className="mb-6">
-                        <span className="font-black text-2xl tracking-tight text-slate-900">
+                        <span className="font-normal text-sm tracking-tight text-slate-900">
                             OpenDesk<span className="text-blue-700">Parcel</span>
                         </span>
                     </div>
-                    <p className="text-gray-500 mt-2 font-medium">Sign in to your account</p>
+                    <p className="text-gray-500 mt-2 font-normal">Sign in to your account</p>
                 </div>
 
                 <div className="glass-card p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-semibold text-primary mb-1.5">Email Address</label>
+                            <label className="block text-sm font-normal text-primary mb-1.5">Email Address</label>
                             <input
                                 type="email"
                                 required
@@ -55,7 +55,7 @@ export default function LoginPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-primary mb-1.5">Password</label>
+                            <label className="block text-sm font-normal text-primary mb-1.5">Password</label>
                             <input
                                 type="password"
                                 required
@@ -68,7 +68,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary transition-all disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
+                            className="w-full py-3 rounded-xl font-normal disabled:opacity-60 flex items-center justify-center gap-2 mt-2 btn-base btn-primary"
                         >
                             {loading ? <span className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" /> : <LogIn size={18} />}
                             {loading ? 'Signing in...' : 'Sign In'}
@@ -76,11 +76,11 @@ export default function LoginPage() {
                     </form>
 
                     <div className="text-right text-xs mt-2">
-                        <Link to="/forgot-password" className="text-gray-400 hover:text-accent transition-colors font-medium">Forgot password?</Link>
+                        <Link to="/forgot-password" className="text-gray-400 hover:text-accent transition-colors font-normal">Forgot password?</Link>
                     </div>
                     <p className="text-center text-sm text-gray-500 mt-6">
                         New company?{' '}
-                        <Link to="/register" className="text-accent font-semibold hover:underline">Register here</Link>
+                        <Link to="/register" className="text-accent font-normal hover:underline">Register here</Link>
                     </p>
                     <p className="text-center text-xs text-gray-400 mt-3 pt-3 border-t border-gray-200/50">
                         <Link to="/onboarding" className="hover:text-accent transition-colors">← Back to home</Link>

@@ -31,11 +31,11 @@ export default function RegisterPage() {
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle className="text-green-600" size={40} />
                     </div>
-                    <h2 className="text-2xl font-black text-primary mb-3">Registration Complete!</h2>
-                    <p className="text-gray-500 mb-6 font-medium">
+                    <h2 className="text-base font-semibold text-primary mb-3">Registration Complete!</h2>
+                    <p className="text-gray-500 mb-6 font-normal">
                         Your company has been successfully registered. You can now securely log into your admin dashboard.
                     </p>
-                    <Link to="/login" className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-secondary transition-all">
+                    <Link to="/login" className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-normal hover:bg-secondary transition-all">
                         Log In Now
                     </Link>
                 </div>
@@ -48,7 +48,7 @@ export default function RegisterPage() {
             <div className="w-full max-w-md animate-fadeIn mt-8 mb-12">
                 <div className="text-center mb-8">
                     <div className="mb-6">
-                        <span className="font-black text-2xl tracking-tight text-slate-900">
+                        <span className="font-normal text-sm tracking-tight text-slate-900">
                             OpenDesk<span className="text-blue-700">Parcel</span>
                         </span>
                     </div>
@@ -57,7 +57,7 @@ export default function RegisterPage() {
                 <div className="glass-card p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-semibold text-primary mb-1.5">Company Name</label>
+                            <label className="block text-sm font-normal text-primary mb-1.5">Company Name</label>
                             <input
                                 required
                                 value={form.companyName}
@@ -67,7 +67,7 @@ export default function RegisterPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-primary mb-1.5">Company Phone</label>
+                            <label className="block text-sm font-normal text-primary mb-1.5">Company Phone</label>
                             <input
                                 type="tel"
                                 value={form.companyPhone}
@@ -77,7 +77,7 @@ export default function RegisterPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-primary mb-1.5">Admin Email</label>
+                            <label className="block text-sm font-normal text-primary mb-1.5">Admin Email</label>
                             <input
                                 type="email"
                                 required
@@ -88,7 +88,7 @@ export default function RegisterPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-primary mb-1.5">Password</label>
+                            <label className="block text-sm font-normal text-primary mb-1.5">Password</label>
                             <input
                                 type="password"
                                 required
@@ -102,13 +102,13 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary transition-all disabled:opacity-60 mt-2"
+                            className="w-full py-3 rounded-xl font-normal disabled:opacity-60 mt-2 btn-base btn-primary"
                         >
                             {loading ? 'Registering...' : 'Register Company'}
                         </button>
                     </form>
                     <p className="text-center text-sm text-gray-500 mt-8 pt-4 border-t border-gray-200/50">
-                        Already registered? <Link to="/login" className="text-accent font-bold hover:underline">Sign in</Link>
+                        Already registered? <Link to="/login" className="text-accent font-normal hover:underline">Sign in</Link>
                     </p>
                 </div>
             </div>

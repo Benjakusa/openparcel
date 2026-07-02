@@ -16,14 +16,14 @@ export default function PasswordStrength({ password = '' }) {
             {RULES.map(rule => {
                 const met = rule.test(password);
                 return (
-                    <div key={rule.key} className={`flex items-center gap-2 text-xs font-medium transition-colors ${met ? 'text-emerald-600' : 'text-gray-400'}`}>
+                    <div key={rule.key} className={`flex items-center gap-2 text-xs font-normal transition-colors ${met ? 'text-emerald-600' : 'text-gray-400'}`}>
                         {met ? <CheckCircle size={14} className="shrink-0" /> : <XCircle size={14} className="shrink-0" />}
                         <span>{rule.label}</span>
                     </div>
                 );
             })}
             {password.length > 0 && allMet && (
-                <div className="text-xs font-bold text-emerald-600 mt-1.5 pt-1.5 border-t border-emerald-200">Strong password</div>
+                <div className="text-xs font-normal text-emerald-600 mt-1.5 pt-1.5 border-t border-emerald-200">Strong password</div>
             )}
         </div>
     );

@@ -6,7 +6,7 @@ import { ArrowLeft, Printer, Download, MessageCircle, RefreshCw, Send } from 'lu
 import { useAuth } from '../contexts/AuthContext';
 
 function StatusBadge({ status }) {
-    return <span className={`text-sm font-bold px-3 py-1.5 rounded-full badge-${status}`}>{status?.replace(/_/g, ' ')}</span>;
+    return <span className={`text-sm font-normal px-3 py-1.5 rounded-full badge-${status}`}>{status?.replace(/_/g, ' ')}</span>;
 }
 
 function TimelineStep({ label, time, active, done }) {
@@ -16,7 +16,7 @@ function TimelineStep({ label, time, active, done }) {
                 <div className={`w-3 h-3 rounded-full ${done || active ? 'bg-white' : 'bg-gray-400'}`} />
             </div>
             <div>
-                <div className={`font-semibold text-sm ${done || active ? 'text-primary' : 'text-gray-400'}`}>{label}</div>
+                <div className={`font-normal text-sm ${done || active ? 'text-primary' : 'text-gray-400'}`}>{label}</div>
                 {time && <div className="text-xs text-gray-400">{new Date(time).toLocaleString()}</div>}
             </div>
         </div>
@@ -83,7 +83,7 @@ export default function ParcelDetail() {
             <div className="bg-primary text-white px-4 py-4 flex items-center gap-3">
                 <button onClick={() => navigate(-1)} className="text-pale hover:text-white p-2 bg-white/10 rounded-xl transition-colors"><ArrowLeft size={20} /></button>
                 <div>
-                    <div className="font-bold">Parcel Detail</div>
+                    <div className="font-normal">Parcel Detail</div>
                     <div className="text-xs text-blue-200 font-mono">{parcel.tracking_id || 'PENDING'}</div>
                 </div>
             </div>
@@ -92,7 +92,7 @@ export default function ParcelDetail() {
                 {/* Status */}
                 <div className="bg-white rounded-2xl border border-pale p-5">
                     <div className="flex items-center justify-between mb-4">
-                        <div className="font-bold text-primary">Status</div>
+                        <div className="font-normal text-primary">Status</div>
                         <StatusBadge status={parcel.status} />
                     </div>
                     {/* Timeline */}
@@ -106,7 +106,7 @@ export default function ParcelDetail() {
 
                 {/* Parcel info */}
                 <div className="bg-white rounded-2xl border border-pale p-5 space-y-3 text-sm">
-                    <div className="font-bold text-primary mb-1">Parcel Details</div>
+                    <div className="font-normal text-primary mb-1">Parcel Details</div>
                     {[
                         ['From', parcel.sending_office_name],
                         ['To', parcel.receiving_office_name],
@@ -116,7 +116,7 @@ export default function ParcelDetail() {
                     ].map(([l, v]) => (
                         <div key={l} className="flex items-center justify-between">
                             <span className="text-gray-500">{l}</span>
-                            <span className="font-semibold text-primary">{v}</span>
+                            <span className="font-normal text-primary">{v}</span>
                         </div>
                     ))}
                 </div>
@@ -126,8 +126,8 @@ export default function ParcelDetail() {
                     {[['Sender', parcel.sender_name, parcel.sender_phone, parcel.sender_id_masked],
                     ['Receiver', parcel.receiver_name, parcel.receiver_phone, null]].map(([role, name, phone, id]) => (
                         <div key={role} className="bg-white rounded-2xl border border-pale p-4 text-sm">
-                            <div className="text-xs text-gray-400 font-semibold uppercase mb-2">{role}</div>
-                            <div className="font-bold text-primary">{name}</div>
+                            <div className="text-xs text-gray-400 font-normal uppercase mb-2">{role}</div>
+                            <div className="font-normal text-primary">{name}</div>
                             <div className="text-gray-500">{phone}</div>
                             {id && <div className="text-gray-400 font-mono text-xs">{id}</div>}
                         </div>
@@ -136,33 +136,33 @@ export default function ParcelDetail() {
 
                 {/* Actions */}
                 <div className="bg-white rounded-2xl border border-pale p-5">
-                    <div className="font-bold text-primary mb-3">Actions</div>
+                    <div className="font-normal text-primary mb-3">Actions</div>
                     <div className="grid grid-cols-2 gap-3">
-                        <button onClick={() => downloadReceipt('sender')} className="flex items-center justify-center gap-2 bg-pale/50 text-primary py-2.5 rounded-xl text-sm font-semibold hover:bg-pale transition-colors">
+                        <button onClick={() => downloadReceipt('sender')} className="flex items-center justify-center gap-2 bg-pale/50 text-primary py-2.5 rounded-xl text-sm font-normal hover:bg-pale transition-colors">
                             <Download size={15} /> Sender Receipt
                         </button>
-                        <button onClick={() => downloadReceipt('receiver')} className="flex items-center justify-center gap-2 bg-pale/50 text-primary py-2.5 rounded-xl text-sm font-semibold hover:bg-pale transition-colors">
+                        <button onClick={() => downloadReceipt('receiver')} className="flex items-center justify-center gap-2 bg-pale/50 text-primary py-2.5 rounded-xl text-sm font-normal hover:bg-pale transition-colors">
                             <Download size={15} /> Receiver Receipt
                         </button>
                         {parcel.tracking_id && (
-                            <Link to={`/print/${id}`} className="flex items-center justify-center gap-2 bg-accent text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-secondary col-span-2 transition-colors">
+                            <Link to={`/print/${id}`} className="flex items-center justify-center gap-2 bg-accent text-white py-2.5 rounded-xl text-sm font-normal hover:bg-secondary col-span-2 transition-colors">
                                 <Printer size={15} /> Print QR Sticker
                             </Link>
                         )}
 
                         {parcel.status === 'created' && parcel.sending_office_id === user.office_id && (
-                            <Link to={`/scan?mode=dispatch&id=${parcel.tracking_id}`} className="flex flex-col items-center justify-center gap-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 col-span-2 transition-colors cursor-pointer">
+                            <Link to={`/scan?mode=dispatch&id=${parcel.tracking_id}`} className="flex flex-col items-center justify-center gap-1 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-normal hover:bg-blue-700 col-span-2 transition-colors cursor-pointer">
                                 <div className="flex gap-2 items-center"><Send size={15} /> Scan to Dispatch</div>
                             </Link>
                         )}
 
                         {['dispatched', 'arrived', 'picked_up'].includes(parcel.status) && (
-                            <button onClick={resendWhatsApp} disabled={resending} className="flex items-center justify-center gap-2 bg-green-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 col-span-2 disabled:opacity-60">
+                            <button onClick={resendWhatsApp} disabled={resending} className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-normal col-span-2 disabled:opacity-60 btn-base btn-primary">
                                 <MessageCircle size={15} />{resending ? 'Sending...' : 'Resend WhatsApp'}
                             </button>
                         )}
                         {['pending_payment', 'payment_failed'].includes(parcel.status) && parcel.status !== 'payment_failed' && (
-                            <button onClick={retryPayment} disabled={retrying} className="flex items-center justify-center gap-2 bg-yellow-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-yellow-600 col-span-2 disabled:opacity-60">
+                            <button onClick={retryPayment} disabled={retrying} className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-normal col-span-2 disabled:opacity-60 btn-base btn-primary">
                                 <RefreshCw size={15} />{retrying ? 'Retrying...' : 'Retry Payment'}
                             </button>
                         )}

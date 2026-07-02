@@ -20,14 +20,14 @@ const SORT_OPTIONS = [
 ];
 
 function StatusBadge({ status }) {
-  return <span className={`text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide ${STATUS_MAP[status] || 'bg-gray-100 text-gray-600'}`}>{status}</span>;
+  return <span className={`text-xs font-normal px-2.5 py-1 rounded-full uppercase tracking-wide ${STATUS_MAP[status] || 'bg-gray-100 text-gray-600'}`}>{status}</span>;
 }
 
 function TrialDays({ endDate }) {
   if (!endDate) return <span className="text-gray-400">—</span>;
   const days = Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
   const cls = days > 14 ? 'text-emerald-600' : days > 7 ? 'text-amber-600' : days > 0 ? 'text-red-500' : 'text-gray-400';
-  return <span className={`font-bold ${cls}`}>{days > 0 ? `${days}d` : 'Expired'}</span>;
+  return <span className={`font-normal ${cls}`}>{days > 0 ? `${days}d` : 'Expired'}</span>;
 }
 
 export default function AdminCompanies() {
@@ -84,8 +84,8 @@ export default function AdminCompanies() {
             <Building2 size={24} className="text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-primary">Client Companies</h1>
-            <p className="text-sm font-medium text-gray-500">{companies.length} registered tenants</p>
+            <h1 className="text-base sm:text-base font-semibold text-primary">Client Companies</h1>
+            <p className="text-sm font-normal text-gray-500">{companies.length} registered tenants</p>
           </div>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -93,18 +93,18 @@ export default function AdminCompanies() {
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search..."
-              className="w-full pl-9 pr-3 py-2 bg-white/70 border border-white/60 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all focus:bg-white placeholder-gray-400"
+              className="w-full pl-9 pr-3 py-2 bg-white/70 border border-white/60 rounded-xl text-sm font-normal text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition-all focus:bg-white placeholder-gray-400"
             />
           </div>
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+            className="bg-white/70 border border-white/60 rounded-xl px-3 py-2 text-sm font-normal text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">All status</option>
             <option value="trialing">Trialing</option>
             <option value="active">Active</option>
             <option value="expired">Expired</option>
             <option value="suspended">Suspended</option>
           </select>
-          <button onClick={fetchCompanies} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl text-gray-500 hover:text-primary transition-all shrink-0" title="Refresh">
+          <button onClick={fetchCompanies} className="w-10 h-10 glass-card bg-white/50 border-white/60 flex items-center justify-center rounded-xl shrink-0 btn-base btn-secondary" title="Refresh">
             <RefreshCw size={18} />
           </button>
         </div>
@@ -128,7 +128,7 @@ export default function AdminCompanies() {
                   { key: 'registered_at', label: 'Registered' },
                   { key: null, label: 'Actions' },
                 ].map(({ key, label }) => (
-                  <th key={label} className={`px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider ${key ? 'cursor-pointer hover:text-primary' : ''}`}
+                  <th key={label} className={`px-4 py-3 text-left text-xs font-normal text-gray-500 uppercase tracking-wider ${key ? 'cursor-pointer hover:text-primary' : ''}`}
                     onClick={() => key && toggleSort(key)}>
                     <span className="flex items-center gap-1">{label}{key && sort === key && <ChevronDown size={12} className={`transition-transform ${order === 'ASC' ? 'rotate-180' : ''}`} />}</span>
                   </th>
@@ -137,52 +137,52 @@ export default function AdminCompanies() {
             </thead>
             <tbody className="divide-y divide-gray-100/50">
               {loading ? (
-                <tr><td colSpan={12} className="py-12 text-center font-bold uppercase tracking-widest text-xs text-gray-400">Loading...</td></tr>
+                <tr><td colSpan={12} className="py-12 text-center font-normal uppercase tracking-widest text-xs text-gray-400">Loading...</td></tr>
               ) : companies.length === 0 ? (
-                <tr><td colSpan={12} className="py-12 text-center font-bold uppercase tracking-widest text-xs text-gray-400">No companies found</td></tr>
+                <tr><td colSpan={12} className="py-12 text-center font-normal uppercase tracking-widest text-xs text-gray-400">No companies found</td></tr>
               ) : companies.map(c => (
                 <tr key={c.id} className="hover:bg-white/60 transition-colors group">
                   <td className="px-4 py-3">
                     <button onClick={() => navigate(`/admin/companies/${c.id}`)}
-                      className="font-black text-primary text-base hover:text-accent transition-colors text-left">
+                      className="font-normal text-primary text-base hover:text-accent transition-colors text-left">
                       {c.name}
                     </button>
                   </td>
                   <td className="px-4 py-3">
                     {c.approved
-                      ? <span className="flex items-center gap-1 text-emerald-600 font-bold text-xs"><CheckCircle size={12} /> Yes</span>
-                      : <span className="flex items-center gap-1 text-red-500 font-bold text-xs"><XCircle size={12} /> Pending</span>}
+                      ? <span className="flex items-center gap-1 text-emerald-600 font-normal text-xs"><CheckCircle size={12} /> Yes</span>
+                      : <span className="flex items-center gap-1 text-red-500 font-normal text-xs"><XCircle size={12} /> Pending</span>}
                   </td>
                   <td className="px-4 py-3"><StatusBadge status={c.subscription_status} /></td>
-                  <td className="px-4 py-3 font-medium text-gray-600 text-xs">{c.subscription_plan || '—'}</td>
+                  <td className="px-4 py-3 font-normal text-gray-600 text-xs">{c.subscription_plan || '—'}</td>
                   <td className="px-4 py-3">
                     {c.mpesa_configured
-                      ? <span className="text-emerald-500 font-bold text-lg leading-none">✓</span>
-                      : <span className="text-red-300 font-bold text-lg leading-none">✗</span>}
+                      ? <span className="text-emerald-500 font-normal text-sm leading-none">✓</span>
+                      : <span className="text-red-300 font-normal text-sm leading-none">✗</span>}
                   </td>
-                  <td className="px-4 py-3 font-semibold text-gray-700">{c.staff_count}</td>
-                  <td className="px-4 py-3 font-semibold text-gray-700">{c.office_count}</td>
-                  <td className="px-4 py-3 font-semibold text-gray-700">{c.parcel_count}</td>
+                  <td className="px-4 py-3 font-normal text-gray-700">{c.staff_count}</td>
+                  <td className="px-4 py-3 font-normal text-gray-700">{c.office_count}</td>
+                  <td className="px-4 py-3 font-normal text-gray-700">{c.parcel_count}</td>
                   <td className="px-4 py-3"><TrialDays endDate={c.trial_end_date} /></td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{new Date(c.registered_at).toLocaleDateString()}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => navigate(`/admin/companies/${c.id}`)}
-                        className="bg-white/50 border border-white/50 hover:bg-white transition-all px-2.5 py-1.5 rounded-lg text-accent hover:text-primary text-xs font-bold">
+                        className="bg-white/50 border border-white/50 hover:bg-white transition-all px-2.5 py-1.5 rounded-lg text-accent hover:text-primary text-xs font-normal">
                         View
                       </button>
                       {!c.approved &&
                         <button onClick={() => approve(c.id, c.name)}
-                          className="bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 transition-all px-2.5 py-1.5 rounded-lg text-emerald-700 text-xs font-bold">
+                          className="bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 transition-all px-2.5 py-1.5 rounded-lg text-emerald-700 text-xs font-normal">
                           Approve
                         </button>}
                       {c.approved && c.subscription_status !== 'suspended' &&
                         <button onClick={() => suspend(c.id, c.name)}
-                          className="bg-red-50 hover:bg-red-100 border border-red-100 transition-all px-2.5 py-1.5 rounded-lg text-red-600 text-xs font-bold">
+                          className="bg-red-50 hover:bg-red-100 border border-red-100 transition-all px-2.5 py-1.5 rounded-lg text-red-600 text-xs font-normal">
                           Suspend
                         </button>}
                       <button onClick={() => deleteCompany(c.id, c.name)}
-                        className="bg-gray-100 hover:bg-gray-200 border border-gray-200 transition-all px-2.5 py-1.5 rounded-lg text-gray-700 text-xs font-bold">
+                        className="bg-gray-100 hover:bg-gray-200 border border-gray-200 transition-all px-2.5 py-1.5 rounded-lg text-gray-700 text-xs font-normal">
                         Delete
                       </button>
                     </div>
